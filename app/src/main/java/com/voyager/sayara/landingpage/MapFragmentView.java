@@ -1,6 +1,7 @@
 package com.voyager.sayara.landingpage;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -57,13 +59,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 import com.voyager.sayara.MapPlaceSearch.MapPlaceSearch;
 import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
 import com.voyager.sayara.PulsatingActivity.view.IPulsatingView;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
+import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.fare.FareEstimate;
 import com.voyager.sayara.landingpage.model.Cars;
+import com.voyager.sayara.landingpage.model.DriverProfile;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.geogetpath.Route;
 import com.voyager.sayara.landingpage.presenter.IMapFragmentPresenter;
@@ -76,11 +83,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+
 
 /**
  * Created by User on 19-Jan-18.
  */
 
+@SuppressLint("ValidFragment")
 public class MapFragmentView extends Fragment implements
         OnMapReadyCallback,
         LocationListener,
@@ -153,6 +163,33 @@ public class MapFragmentView extends Fragment implements
     OnTripStartUp onTripStartUp;
 
     String findDriver ="";
+    @BindView(R.id.driverHeaderLayout)
+    LinearLayout driverHeaderLayout;
+    @BindView(R.id.driverBodyLayout)
+    LinearLayout driverBodyLayout;
+    @BindView(R.id.tripSupportCall)
+    LinearLayout tripSupportCall;
+    @BindView(R.id.tripCancel)
+    LinearLayout tripCancel;
+    @BindView(R.id.driverCircleImageView)
+    CircleImageView driverCircleImageView;
+    @BindView(R.id.driverName)
+    TextView driverName;
+    @BindView(R.id.driverRating)
+    TextView driverRating;
+    @BindView(R.id.carName)
+    TextView carName;
+    @BindView(R.id.driverCity)
+    TextView driverCity;
+    @BindView(R.id.carNo)
+    TextView carNo;
+    @BindView(R.id.tripStartOrgin)
+    TextView tripStartOrgin;
+    @BindView(R.id.tripEndDestin)
+    TextView tripEndDestin;
+    @BindView(R.id.tripAmount)
+    TextView tripAmount;
+
 
 
     public MapFragmentView(Activity activity) {
@@ -451,9 +488,53 @@ public class MapFragmentView extends Fragment implements
             case Helper.GET_DRIVER:
                 if (resultCode == Activity.RESULT_OK) {
                     onTripStartUp = data.getParcelableExtra("OnTripStartUp");
+                    final DriverProfile driverProfile = onTripStartUp.getDriverProfile();
                     Gson gson = new Gson();
                     String jsonString = gson.toJson(onTripStartUp);
                     System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString );
+                    driverHeaderLayout.setVisibility(View.VISIBLE);
+                    try{
+                        Picasso.with(getActivity())
+                                .load(driverProfile.getDriverPhone())
+                                .networkPolicy(NetworkPolicy.OFFLINE)
+                                .resize(0, 200)
+                                .into(driverCircleImageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        //Try again online if cache failed
+                                        Picasso.with(getActivity())
+                                                .load(driverProfile.getDriverPhone())
+                                                .error(R.drawable.profile)
+                                                .resize(0, 200)
+                                                .into(driverCircleImageView, new Callback() {
+                                                    @Override
+                                                    public void onSuccess() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onError() {
+                                                        Log.v("Picasso","Could not fetch image");
+                                                    }
+                                                });
+                                    }
+                                });
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    driverName.setText(driverProfile.getDriverName());
+                    //driverRating;
+                    carName.setText(driverProfile.getCarName());
+                    driverCity.setText(driverProfile.getDriverCity());
+                    carNo.setText(driverProfile.getCarNumber());
+                    tripStartOrgin.setText(onTripStartUp.getPickupAddress());
+                    tripEndDestin.setText(onTripStartUp.getDropAddress());
+                    tripAmount.setText("");
                 }
                 break;
 

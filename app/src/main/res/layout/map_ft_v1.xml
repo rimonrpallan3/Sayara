@@ -242,6 +242,8 @@
 
         <!--Trip Start -->
 
+        <include layout="@layout/trip_start_up" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabLoc"
             android:layout_width="wrap_content"

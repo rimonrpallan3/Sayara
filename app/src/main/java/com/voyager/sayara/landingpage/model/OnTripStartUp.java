@@ -18,6 +18,8 @@ public class OnTripStartUp implements Parcelable {
 
     private String tripId;
     private String tripStatus;
+    private String pickupAddress;
+    private String dropAddress;
     private DriverProfile driverProfile;
 
     public OnTripStartUp() {
@@ -40,6 +42,25 @@ public class OnTripStartUp implements Parcelable {
         this.tripStatus = tripStatus;
     }
 
+    public String getPickupAddress() {
+        return pickupAddress;
+    }
+
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
+    }
+
+    public String getDropAddress() {
+        return dropAddress;
+    }
+
+    public void setDropAddress(String dropAddress) {
+        this.dropAddress = dropAddress;
+    }
+
+    public static Creator<OnTripStartUp> getCREATOR() {
+        return CREATOR;
+    }
 
     public DriverProfile getDriverProfile() {
         return driverProfile;
@@ -54,11 +75,14 @@ public class OnTripStartUp implements Parcelable {
         return 0;
     }
 
+
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.tripId);
         dest.writeString(this.tripStatus);
         dest.writeParcelable(this.driverProfile, flags);
+
     }
 
     protected OnTripStartUp(Parcel in) {
