@@ -86,7 +86,7 @@ public class MapFragmentView extends Fragment implements
         LocationListener,
         NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener,
-        IMapFragmentView,IPulsatingView {
+        IMapFragmentView {
 
     TextView cashTextView;
     private GoogleMap mMap;
@@ -150,6 +150,7 @@ public class MapFragmentView extends Fragment implements
     LinearLayout carMiniLayout;
     LinearLayout carTruck;
     UserDetails userDetails;
+    OnTripStartUp onTripStartUp;
 
     String findDriver ="";
 
@@ -449,10 +450,11 @@ public class MapFragmentView extends Fragment implements
 
             case Helper.GET_DRIVER:
                 if (resultCode == Activity.RESULT_OK) {
-                    findDriver = data.getStringExtra("waitingForDriver");
+                    onTripStartUp = data.getParcelableExtra("OnTripStartUp");
+                    Gson gson = new Gson();
+                    String jsonString = gson.toJson(onTripStartUp);
+                    System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString );
                 }
-
-
                 break;
 
             default:
@@ -689,14 +691,6 @@ public class MapFragmentView extends Fragment implements
             System.out.println("carType"+carType);
             System.out.println("driveCarId"+carId);
         }
-
-    }
-
-    @Override
-    public void getDriverDetails(OnTripStartUp onTripStartData) {
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(onTripStartData);
-        System.out.println(" ----------- MapFragmentView getDriverDetails "+jsonString);
 
     }
 }

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#e3af12</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#fdd14c</color>
+    <color name="iconColor">#fdd14c</color>
 
     <!--Highlight Text Color-->
     <color name="highLightText">#ffa500</color>
@@ -21,7 +22,8 @@
     <color name="heading_text_background_color">#FFECECEC</color>
 
     <!-- Drawer Color -->
-    <color name="nav_drawer_list_bag_color">#FFFBC87E</color>
+    <color name="nav_drawer_list_bag_color">#fdfdfe</color>
+    <color name="nav_drawer_header_bag_color">#ececec</color>
 
     <!--Drawer Update page-->
     <color name="text_bng_color">#e8e8e8</color>
@@ -39,6 +41,7 @@
 
     <!--Start Trip-->
     <color name="divider_line">#e5e5e5</color>
+
 
     <!--pop up Dialog Box-->
     <color name="popup_inner_layer">#2a2a2a</color>

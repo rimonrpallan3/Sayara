@@ -34,7 +34,7 @@ import java.util.List;
  * Created by User on 02-Feb-18.
  */
 
-public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearchView, IPulsatingView{
+public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearchView{
 
     Activity activity;
     public Toolbar toolbarMapPlaceSearch;
@@ -214,10 +214,5 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
         resultIntent.putExtra("userId", userDetails.getUserID());
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
-    }
-
-    @Override
-    public void getDriverDetails(OnTripStartUp onTripStartData) {
-
     }
 }

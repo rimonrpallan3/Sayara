@@ -182,6 +182,7 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
     public void waitToGetDriver() {
         Intent resultIntent = new Intent(this, PulsatingActivity.class);
         resultIntent.putExtra("waitingForDriver", "true");
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         setResult(Activity.RESULT_OK, resultIntent);
         startActivity(resultIntent);
         finish();

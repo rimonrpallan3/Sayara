@@ -7,22 +7,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +36,10 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater;
+import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -92,6 +102,13 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // Do something for lollipop and above versions
+            LayoutInflaterCompat.setFactory2(getLayoutInflater(), new IconicsLayoutInflater2(getDelegate()));
+        } else{
+            LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
+            // do something for phones running an SDK before lollipop
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
         activity = this;
@@ -131,6 +148,27 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
         //  Navigation Drawer
         navigationView = (NavigationView) findViewById(R.id.navigationView);
+        Menu menu = navigationView.getMenu();
+        MenuItem profileImg = menu.findItem(R.id.updateProfile);
+        MenuItem infoTripImg = menu.findItem(R.id.infoTrip);
+        MenuItem helpImg = menu.findItem(R.id.help);
+       /* ImageView infoImg = (ImageView) hView1.findViewById(R.id.infoTrip);
+        ImageView helpImg = (ImageView) hView2.findViewById(R.id.help);*/
+        final Drawable profileIcon = new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_account)
+                .color(ResourcesCompat.getColor(getResources(),R.color.iconColor,null))
+                .sizeDp(12);
+        profileImg.setIcon(profileIcon);
+        final Drawable infoIcon = new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_information)
+                .color(ResourcesCompat.getColor(getResources(),R.color._1,null))
+                .sizeDp(12);
+        infoTripImg.setIcon(infoIcon);
+        final Drawable questionIcon = new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_comment_question_outline)
+                .color(ResourcesCompat.getColor(getResources(),R.color._1,null))
+                .sizeDp(12);
+        helpImg.setIcon(questionIcon);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         choseTripBackPress = (ImageButton) findViewById(R.id.choseTripBackPress);
 
@@ -172,6 +210,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
                     customerProfileDrawerImg = (CircleImageView) navigationView.findViewById(R.id.customerProfileDrawerImg);
                     customerProfileDrawerTitle = (TextView) navigationView.findViewById(R.id.customerProfileDrawerTitle);
+
                     try{
                         Picasso.with(this)
                                 .load(userDetails.getImgPath())
@@ -326,7 +365,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
                 switch (menuItem.getItemId()) {
 
                     //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case R.id.your_trips:
+                    case R.id.infoTrip:
                         Intent intent = new Intent(LandingPage.this, TripHistory.class);
                         intent.putExtra("UserDetails", userDetails);
                         startActivity(intent);

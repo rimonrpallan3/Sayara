@@ -26,7 +26,7 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
  * Created by User on 16-Mar-18.
  */
 
-public class PulsatingActivity  extends AppCompatActivity implements View.OnClickListener, IPulsatingView {
+public class PulsatingActivity  extends AppCompatActivity implements View.OnClickListener {
 
 
     ImageView pulseImg;
@@ -73,7 +73,6 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
         PulsatorLayout pulsator = (PulsatorLayout) findViewById(R.id.pulsator);
         pulsator.start();
 
-        iPulsatingPresenter = new PulsatingPresenter(this);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -96,7 +95,9 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
         bundle.putParcelable("OnTripStartUp", onTripStartUp);
         bundle.putString("fcmPush",fcmPush);
         if(onTripStartUp!=null){
-            iPulsatingPresenter.setOnTripStartData(onTripStartUp);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("OnTripStartUp", onTripStartUp);
+            setResult(Activity.RESULT_OK, resultIntent);
             finish();
         }
 
@@ -148,10 +149,5 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
                 break;
 
         }
-    }
-
-    @Override
-    public void getDriverDetails(OnTripStartUp onTripStartData) {
-
     }
 }

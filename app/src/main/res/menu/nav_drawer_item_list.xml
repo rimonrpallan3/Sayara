@@ -14,7 +14,7 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/your_trips"
+            android:id="@+id/infoTrip"
             android:checked="false"
             android:icon="@drawable/info_icon"
             android:title="@string/drawer_your_trips" />
