@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/updateToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/highLightText"
+        android:elevation="@dimen/_04"
+        android:theme="@style/WhiteDrawerIconStyle" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_20"
+                android:orientation="horizontal">
+
+                <com.voyager.sayara.costom.CircleImageView
+                    android:id="@+id/updateProfileImg"
+                    android:layout_width="@dimen/_100"
+                    android:layout_height="@dimen/_100"
+                    android:layout_gravity="center"
+                    android:src="@drawable/profile" />
+
+                <com.voyager.sayara.costom.CircleImageView
+                    android:id="@+id/updateProfileImgBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="@dimen/_45"
+                    android:src="@drawable/camera"
+                    app:civ_border="true"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="3dp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_20"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/updateTName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_16"
+                        android:text="Name"
+                        android:textSize="@dimen/_10" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginTop="@dimen/_10"
+                        android:background="@color/text_bng_color"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:id="@+id/updateFrameName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/updateCName"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10"
+                                android:layout_marginRight="@dimen/_10"
+                                android:gravity="left|center"
+                                android:onClick="updateCName"
+                                android:text="Alex John" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/updateTEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10"
+                        android:text="Email" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginTop="@dimen/_10"
+                        android:background="@color/text_bng_color"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/updateCEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10"
+                                android:layout_marginRight="@dimen/_10"
+                                android:gravity="left|center"
+                                android:text="alexjohn123@gmail.com" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/updateTPhoneNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10"
+                        android:text="Phone Number" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginTop="@dimen/_10"
+                        android:background="@color/text_bng_color"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/updateCPhoneNo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10"
+                                android:layout_marginRight="@dimen/_10"
+                                android:drawableRight="@drawable/edit_icon"
+                                android:gravity="left|center"
+                                android:text="9000000243" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/updateTPass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10"
+                        android:text="Password" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginTop="@dimen/_10"
+                        android:background="@color/text_bng_color"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/updateCPass"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10"
+                                android:layout_marginRight="@dimen/_10"
+                                android:drawableRight="@drawable/edit_icon"
+                                android:gravity="left|center"
+                                android:inputType="textPassword"
+                                android:text="asadsadsadsad" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/updateTCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10"
+                        android:text="City" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginTop="@dimen/_10"
+                        android:background="@color/text_bng_color"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/updateCCity"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10"
+                                android:layout_marginRight="@dimen/_10"
+                                android:drawableRight="@drawable/edit_icon"
+                                android:gravity="left|center"
+                                android:text="Manama" />
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

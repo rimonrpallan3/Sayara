@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context="com.voyager.sayara.loginsignuppage.LoginSignUpPage">
+
+  <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/LoginSignInLogo"
+            android:layout_width="@dimen/_200"
+            android:layout_height="@dimen/_200"
+            android:layout_gravity="center"
+            android:src="@drawable/new_user_logo"
+            android:layout_marginBottom="@dimen/_20"
+            android:textAllCaps="false" />
+
+      <Button
+          android:id="@+id/btnSignIn"
+          android:text="@string/signIn_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="@dimen/_40"
+          android:textColor="@color/black"
+          android:textSize="@dimen/_12"
+          android:background="@drawable/rectangle_button"
+          android:layout_marginTop="@dimen/_10"
+          android:onClick="btnSignIn"
+          android:textAllCaps="false" />
+
+      <Button
+            android:id="@+id/btnSignUp"
+            android:text="@string/signUp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_40"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12"
+            android:background="@drawable/rectangle_button"
+            android:layout_marginTop="@dimen/_10"
+            android:onClick="btnSignUp"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="@dimen/_20"
+        android:layout_height="@dimen/_20"
+        android:background="@drawable/hidden_btn"
+        android:onClick="btnHiddenBtn"
+        />
+
+
+
+</FrameLayout>

@@ -1,0 +1,11 @@
+package com.voyager.sayara.signinpage.presenter;
+
+/**
+ * Created by kaede on 2015/10/12.
+ */
+public interface ILoginPresenter {
+	void clear();
+	void doLogin(String emailPhno, String passwd,String fireBaseToken);
+	void setProgressBarVisiblity(int visiblity);
+	void onLoginSucuess();
+}

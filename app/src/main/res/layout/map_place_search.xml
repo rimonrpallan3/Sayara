@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarMapPlaceSearch"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/highLightText"
+        android:elevation="@dimen/_06"
+        android:theme="@style/WhiteDrawerIconStyle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_110"
+        android:background="@drawable/shadow_effect_recycle"
+        android:elevation="@dimen/_04"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="@dimen/_60"
+                android:layout_height="@dimen/_110"
+                android:gravity="top|center"
+                android:orientation="vertical">
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|center"
+                        android:layout_marginTop="@dimen/_10"
+                        android:src="@drawable/starting_point" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/_04"
+                        android:src="@drawable/dots_2" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginBottom="@dimen/_20"
+                        android:src="@drawable/map_marker" />
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_10"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/tvMapSource"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/source_hint"
+                    android:layout_marginRight="@dimen/_30"
+                    android:background="@drawable/edittext_selector" />
+
+                <EditText
+                    android:id="@+id/tvMapDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/destination_hint"
+                    android:layout_marginTop="@dimen/_30"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:layout_marginRight="@dimen/_30"
+                    android:background="@drawable/edittext_selector" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/searchMapApiItemListRecycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/recycleView_bg">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

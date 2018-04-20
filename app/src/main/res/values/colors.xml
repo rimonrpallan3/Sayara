@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e3af12</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#fdd14c</color>
+
+    <!--Highlight Text Color-->
+    <color name="highLightText">#ffa500</color>
+    <color name="hintHighLightText">#a5a5a5</color>
+    <color name="white">#FFF</color>
+    <color name="Approval_pending">#eeaa00</color>
+    <color name="green">#00513f</color>
+    <color name="black">#000000</color>
+    <color name="red">#F44336</color>
+    <color name="dark_red">#D50000</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="dark_gray">#a9a9a9</color>
+    <color name="red_dull">#EF5350</color>
+
+    <!--Trip Detail Page-->
+    <color name="heading_text_background_color">#FFECECEC</color>
+
+    <!-- Drawer Color -->
+    <color name="nav_drawer_list_bag_color">#FFFBC87E</color>
+
+    <!--Drawer Update page-->
+    <color name="text_bng_color">#e8e8e8</color>
+    <!-- Switch Color -->
+    <color name="disable_forground_grey">#F44336</color>
+    <color name="disable_thumb_grey">#EF5350</color>
+    <color name="enable_thumb_grey">#90c602</color>
+    <!--Landing Map Fragment-->
+    <color name="black_transparent">#70000000</color>
+
+    <!--Map Place Search-->
+    <color name="fade_txt_color">#b8b4b4</color>
+    <color name="divider_dark_gray">#e4e1e1</color>
+    <color name="recycleView_bg">#FAFAFA</color>
+
+    <!--Start Trip-->
+    <color name="divider_line">#e5e5e5</color>
+
+    <!--pop up Dialog Box-->
+    <color name="popup_inner_layer">#2a2a2a</color>
+    <color name="popup_outer">#a9a9a9</color>
+    <!--Route Found Page -->
+    <color name="bag_marker_color">#faaf40</color>
+
+    <!--DTD page  -->
+    <color name="background_highLight">#ededed</color>
+    <!-- Colors For polynomial lines-->
+    <color name="_1">#297bf4</color>
+    <color name="_2">#f42929</color>
+    <color name="_3">#29f42e</color>
+    <color name="_4">#FF4081</color>
+    <color name="_5">#f6ea01</color>
+    <color name="_6">#9C27B0</color>
+    <color name="_7">#3F51B5</color>
+    <color name="_8">#009688</color>
+    <color name="_9">#FF9800</color>
+    <color name="_10">#000000</color>
+    <color name="_11">#607D8B</color>
+    <color name="_12">#795548</color>
+</resources>

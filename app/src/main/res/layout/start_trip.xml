@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/startTripToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/highLightText"
+        android:elevation="@dimen/_04"
+        android:theme="@style/WhiteDrawerIconStyle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Driver and Car Detail And OTP -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_200"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/_40"
+                android:layout_marginTop="@dimen/_30"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.voyager.sayara.costom.CircleImageView
+                    android:layout_width="@dimen/_80"
+                    android:layout_height="@dimen/_80"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:src="@drawable/profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:text="Driver Name" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/_20"
+                        android:layout_height="@dimen/_20"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/_08"
+                        android:src="@drawable/star" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10"
+                        android:text="4.0"
+                        android:textSize="@dimen/_40" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_20"
+                android:layout_marginLeft="@dimen/_60"
+                android:layout_marginTop="@dimen/_30"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.voyager.sayara.costom.CircleImageView
+                    android:layout_width="@dimen/_80"
+                    android:layout_height="@dimen/_80"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:src="@drawable/profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:text="Car Name" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="top"
+                        android:layout_marginRight="@dimen/_10"
+                        android:text="OTP"
+                        android:textSize="@dimen/_20"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="54135"
+                        android:textSize="@dimen/_20"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <!-- -->
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120"
+            android:layout_marginLeft="@dimen/_10"
+            android:layout_marginRight="@dimen/_10"
+            android:layout_marginTop="@dimen/_16"
+            android:alpha="1"
+            android:orientation="horizontal"
+            app:cardCornerRadius="@dimen/_04"
+            app:cardElevation="@dimen/_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="100"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/callDriver"
+                    android:layout_width="0dp"
+                    android:layout_weight="33.33"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="@dimen/_40"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginBottom="@dimen/_10"
+                        android:src="@drawable/phone"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Call Driver"/>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/divider_line"
+                    android:layout_height="wrap_content"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/showLandMark"
+                    android:layout_width="0dp"
+                    android:layout_weight="33.33"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_height="match_parent"
+                    >
+                    <ImageView
+                        android:layout_width="@dimen/_40"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginBottom="@dimen/_10"
+                        android:src="@drawable/location"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Land Mark"/>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/divider_line"
+                    android:layout_height="wrap_content"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/cancelRide"
+                    android:layout_width="0dp"
+                    android:layout_weight="33.33"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_height="match_parent"
+                    >
+                    <ImageView
+                        android:layout_width="@dimen/_40"
+                        android:layout_height="@dimen/_40"
+                        android:layout_marginBottom="@dimen/_10"
+                        android:src="@drawable/cancel"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel Ride"/>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!-- <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/disable_forground_grey" />-->
+
+
+            <!-- <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="@color/disable_forground_grey"
+                android:gravity="bottom" />-->
+
+        </android.support.v7.widget.CardView>
+
+        <!-- -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="@dimen/_20"
+               android:orientation="horizontal">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="@dimen/_20"
+                   android:text="@string/estimated_money_content"
+                   android:textStyle="bold"
+                   android:textSize="@dimen/_16"/>
+
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginRight="@dimen/_20"
+                   android:gravity="right"
+                   android:layout_gravity="right"
+                   android:text="BD 110"
+                   android:textStyle="bold"
+                   android:textSize="@dimen/_16"/>
+
+           </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20"
+                android:layout_marginTop="@dimen/_20"
+                android:text="*Total fair may change if u change the drop route"
+                android:textStyle="italic"
+                android:textSize="@dimen/_10"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <!---->
+
+
+</LinearLayout>

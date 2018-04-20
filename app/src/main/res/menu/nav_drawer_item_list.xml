@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/updateProfile"
+            android:checked="false"
+            android:icon="@drawable/settings_drawer"
+            android:title="@string/drawer_update_profile" />
+    </group>
+    <group  android:id="@+id/menu_trips"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/your_trips"
+            android:checked="false"
+            android:icon="@drawable/info_icon"
+            android:title="@string/drawer_your_trips" />
+    </group>
+    <group
+        android:id="@+id/menu_help"
+        android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/help"
+            android:checked="false"
+            android:icon="@drawable/question_icon"
+            android:title="@string/drawer_help" />
+    </group>
+
+</menu>

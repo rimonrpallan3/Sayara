@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/SignInPageLogo"
+            android:layout_width="@dimen/_150"
+            android:layout_height="@dimen/_150"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="@dimen/_40"
+            android:src="@drawable/icon4"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/edtEmailPhno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_15"
+                android:layout_marginLeft="@dimen/_20"
+                android:layout_marginTop="@dimen/_10"
+                android:text="@string/otp_firsttxt_msg"
+                android:textSize="@dimen/_14" />
+
+            <EditText
+                android:id="@+id/edtOPTNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/boder_black"
+                android:ellipsize="end"
+                android:hint="@string/otp_no"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/_20"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/txtOTPResend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/highLightText"
+                android:layout_marginTop="@dimen/_10"
+                android:text="@string/otp_resend"
+                android:textSize="@dimen/_14" />
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_50"
+                android:layout_marginLeft="@dimen/_40"
+                android:layout_marginTop="@dimen/_04"
+                android:gravity="left"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkTermsAndConductionBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_04"
+                    android:shadowColor="@color/highLightText" />
+
+
+                <TextView
+                    android:id="@+id/optSecondMsg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_10"
+                    android:text="@string/otp_secondtxt_msg"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/_11" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40"
+                android:background="@drawable/rectangle_button"
+                android:layout_gravity="center"
+                android:onClick="btnSubmit"
+                android:text="@string/submit"
+                android:textAllCaps="false"/>
+
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/_90"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+</ScrollView>

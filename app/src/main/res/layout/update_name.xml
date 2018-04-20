@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/highLightText"
+        android:theme="@style/WhiteDrawerIconStyle"
+        android:elevation="@dimen/_04" />
+
+    <TextView
+        android:id="@+id/tileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20"
+        android:layout_marginLeft="@dimen/_20"
+        android:layout_marginTop="@dimen/_20"
+        android:text="Edit Name"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tileSubPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_40"
+        android:textColor="@color/hintHighLightText"
+        android:text="ReType-Password"/>
+
+    <EditText
+        android:id="@+id/edtUpdateContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20"
+        android:layout_marginLeft="@dimen/_27"
+        android:layout_marginRight="@dimen/_27"
+        android:background="@drawable/boder_black"
+        android:ellipsize="end"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/_20"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/btnUpdateName"
+        android:text="@string/update_btn"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="@dimen/_40"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12"
+        android:background="@drawable/rectangle_button"
+        android:layout_marginTop="@dimen/_10"
+        android:onClick="btnUpdate"
+        android:textAllCaps="false" />
+
+
+</LinearLayout>

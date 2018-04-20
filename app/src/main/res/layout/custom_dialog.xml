@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android='http://schemas.android.com/apk/res/android'
+    android:layout_width='match_parent'
+    android:layout_height='match_parent'
+    android:background="@color/popup_outer"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="@dimen/_260"
+        android:layout_height="@dimen/_260"
+        android:background="@color/popup_inner_layer"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <Button
+            android:id="@+id/galleryBtn"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10"
+            android:background="@drawable/rectangle_button"
+            android:paddingLeft="@dimen/_10"
+            android:text="@string/gallery"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/cameraBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10"
+            android:background="@drawable/rectangle_button"
+            android:drawableLeft="@drawable/ic_action_camera"
+            android:paddingLeft="@dimen/_10"
+            android:text="@string/camera"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10"
+            android:background="@drawable/rectangle_button"
+            android:text="@string/cancel"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</LinearLayout>

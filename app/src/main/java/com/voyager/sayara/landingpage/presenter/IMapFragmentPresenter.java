@@ -1,0 +1,13 @@
+package com.voyager.sayara.landingpage.presenter;
+
+import java.util.List;
+
+/**
+ * Created by User on 15-Feb-18.
+ */
+
+public interface IMapFragmentPresenter {
+    void getTripDirection(final String originLat,final String originLng,  String destinationLat,String destinationLng, Boolean sensor, String ApiKey,Integer userId);
+    void hideVisibilityLayoutItems(int visibility);
+
+}

@@ -1,0 +1,134 @@
+<resources>
+    <string name="app_name">Sayara</string>
+
+    <!-- Sign and SignUp Page-->
+
+    <string name="signUp_btn">Register</string>
+    <string name="signIn_btn">Sign In</string>
+    <string name="update_btn">Update</string>
+    <string name="gps_network_not_enabled">Please Enable Location</string>
+    <string name="open_location_settings">Location Settings</string>
+    <string name="Cancel">Cancel</string>
+    <string name="email_number">Email Address</string>
+    <string name="paswd">Password</string>
+    <string name="account_create">Create an account?</string>
+    <string name="SignUp">\u0020 Sign Up</string>
+    <string name="submit">Submit</string>
+    <string name="btn_register">Register Now</string>
+    <string name="cpr_no">ime</string>
+    <string name="address">City</string>
+    <string name="phno">Phone Number</string>
+    <string name="create_acnt">Have an Account?</string>
+    <string name="Login">\u0020 Log In.</string>
+    <string name="password">Password</string>
+    <string name="retype_password">Re-type Password</string>
+    <string name="emil_address">Email Address</string>
+    <string name="full_name">Full Name</string>
+    <string name="fill_txt">Fill the details below</string>
+
+
+    <!--Opt First page -->
+    <string name="otp_no">OTP Number</string>
+    <string name="otp_spinner_country">Select Country</string>
+    <string name="otp_zip_code_hint">Zip Code</string>
+    <string name="otp_mobile_no_hint">Mobile Number</string>
+    <string name="get_otp">Get OTP</string>
+    <string name="otp_resend">Resend OTP</string>
+    <string name="bahrain_code">+973</string>
+    <string-array name="country_names">
+        <item>Bahrain</item>
+
+    </string-array>
+
+    <!--Terms and Conduction Page-->
+    <string name="terms_and_cond"><![CDATA[Terms & Condition]]></string>
+
+
+    <string name="cont">\u0020 Continue</string>
+    <string name="otp_firsttxt_msg">Enter the OTP receivedon your registered number.</string>
+    <string name="otp_secondtxt_msg"><![CDATA[I agree to the Terms & Conditions & Privacy Policy issued. Terms & Condition.]]></string>
+
+    <string name="image_upload_certificate_txt">Please Upload the Document by taking a Picture. and do something with it, please voyager do something.</string>
+    <string name="register_msg">Thanks for registering with us. You will get a notification once your profile is approved.</string>
+    <string name="approval_btn">Approval Pending</string>
+    <string name="approval_msg">Congratulations!!! Your profile is approved. Please click the below button to login for further activities.</string>
+    <string name="login_btn">Login</string>
+
+    <string name="sign_out">Sign Out</string>
+
+    <!---   Landing page  -->
+    <string name="from_destination_hint_text">Where are you going ?</string>
+    <string name="to_destination_hint_text">Choose where to drop you</string>
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+
+    <!-- Drawer List View-->
+    <string name="drawer_payment">Payment</string>
+    <string name="drawer_your_trips">Your Trips</string>
+    <string name="drawer_help">Help</string>
+    <string name="drawer_update_profile">Update profile</string>
+
+    <!-- menu suggestion -->
+    <string name="action_notification">Notification</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!--Landing page-->
+    <string name="unknown_warning">Your app has not been downloaded from the PlayStore. Kindly update to the latest version.</string>
+    <string name="play_store_warning">unable to find market app</string>
+    <string name="share_yourApp_text">Drive Safe with Sayara App.\n  Download Now!\n https://bit.ly/dlSayaraApp </string>
+    <string name="your_trip_history">Trip History</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="help">HELP</string>
+    <string name="service_unavailable">Service Unavailable</string>
+    <string name="btn_ride_now_txt">Ride Now</string>
+    <string name="search_loc">Search location</string>
+    <string name="fare">Fare</string>
+
+    <!--Custom Dialog Box-->
+
+    <string name="gallery">\u0020 \u0020 \u0020 Gallery</string>
+    <string name="camera">\u0020 \u0020 \u0020 Camera</string>
+    <string name="cancel">Cancel</string>
+
+    <!--StartTrip Page-->
+    <string name="estimated_money_content">Estimated Cash to Be Paid</string>
+
+    <!--Map Place Search-->
+    <string name="source_hint">Enter pickup location</string>
+    <string name="destination_hint">Where to?</string>
+
+    <!--Fare Page-->
+    <string name="accept_txt">Accept</string>
+    <string name="reject_txt">Reject</string>
+
+    <!--Trip Detail Page-->
+    <string name="heading_text_receipt">Sayara Receipt</string>
+
+    <!-- Api Map Key-->
+    <string name="place_api_key">AIzaSyAepUY58DHLFMu6o0n4oynp5U9rAGkn94c</string>
+
+    <!--Map Fragment page-->
+
+    <string name="selected_place">Last Selected Place:</string>
+    <string name="place_details">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        <i>Place Id: %2$s</i>
+        <br/>
+        Address: %3$s
+        <br/>
+        Phone: %4$s
+        <br/>
+        Website: %5$s
+    ]]>
+    </string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+</resources>

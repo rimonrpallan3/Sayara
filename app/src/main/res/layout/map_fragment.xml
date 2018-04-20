@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <LinearLayout
+            android:id="@+id/mapDestination"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
+
+
+            <!--Service unavailable -->
+
+            <LinearLayout
+                android:id="@+id/serviceUnavailable"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:weightSum="100">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="70"
+                    android:gravity="center">
+
+                    <com.voyager.sayara.costom.CircleImageView
+                        android:layout_width="@dimen/_50"
+                        android:layout_height="@dimen/_50"
+                        android:src="@drawable/profile" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:background="@color/dark_red"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/service_unavailable"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!--Service available -->
+
+            <LinearLayout
+                android:id="@+id/serviceAvailable"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:weightSum="100">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="70"
+                    android:gravity="center">
+
+                    <com.voyager.sayara.costom.CircleImageView
+                        android:layout_width="@dimen/_50"
+                        android:layout_height="@dimen/_50"
+                        android:src="@drawable/profile" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="@dimen/_10"
+                    android:layout_marginLeft="@dimen/_20"
+                    android:layout_marginRight="@dimen/_20"
+                    android:layout_weight="30"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btnRideNow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rectangle_button"
+                        android:text="@string/btn_ride_now_txt"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tvMapSourceDestination"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50"
+            android:layout_marginLeft="@dimen/_20"
+            android:layout_marginRight="@dimen/_20"
+            android:layout_marginTop="@dimen/_20"
+            android:background="@drawable/shadow_effect_bottom"
+            android:gravity="top|center"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/autotxtOrigin"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="90"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/location_icon"
+                android:drawablePadding="10dp"
+                android:gravity="left|center"
+                android:hint="@string/from_destination_hint_text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <FrameLayout
+                android:id="@+id/currentLocation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_gps_fixed" />
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
