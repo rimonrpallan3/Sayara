@@ -15,24 +15,13 @@ public class OnTripStartUp implements Parcelable {
      * tripStatus : Accepted
      * driverProfile : {}
      */
-
-    private String tripId;
     private String tripStatus;
-    private String pickupAddress;
-    private String dropAddress;
     private DriverProfile driverProfile;
+    private TripInfo tripInfo;
 
     public OnTripStartUp() {
     }
 
-
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
 
     public String getTripStatus() {
         return tripStatus;
@@ -40,26 +29,6 @@ public class OnTripStartUp implements Parcelable {
 
     public void setTripStatus(String tripStatus) {
         this.tripStatus = tripStatus;
-    }
-
-    public String getPickupAddress() {
-        return pickupAddress;
-    }
-
-    public void setPickupAddress(String pickupAddress) {
-        this.pickupAddress = pickupAddress;
-    }
-
-    public String getDropAddress() {
-        return dropAddress;
-    }
-
-    public void setDropAddress(String dropAddress) {
-        this.dropAddress = dropAddress;
-    }
-
-    public static Creator<OnTripStartUp> getCREATOR() {
-        return CREATOR;
     }
 
     public DriverProfile getDriverProfile() {
@@ -70,25 +39,30 @@ public class OnTripStartUp implements Parcelable {
         this.driverProfile = driverProfile;
     }
 
+    public TripInfo getTripInfo() {
+        return tripInfo;
+    }
+
+    public void setTripInfo(TripInfo tripInfo) {
+        this.tripInfo = tripInfo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.tripId);
-        dest.writeString(this.tripStatus);
         dest.writeParcelable(this.driverProfile, flags);
-
+        dest.writeParcelable(this.tripInfo, flags);
+        dest.writeString(this.tripStatus);
     }
 
     protected OnTripStartUp(Parcel in) {
-        this.tripId = in.readString();
-        this.tripStatus = in.readString();
         this.driverProfile = in.readParcelable(DriverProfile.class.getClassLoader());
+        this.tripInfo = in.readParcelable(TripInfo.class.getClassLoader());
+        this.tripStatus = in.readString();
     }
 
     public static final Creator<OnTripStartUp> CREATOR = new Creator<OnTripStartUp>() {

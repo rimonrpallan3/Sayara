@@ -72,6 +72,7 @@ import com.voyager.sayara.fare.FareEstimate;
 import com.voyager.sayara.landingpage.model.Cars;
 import com.voyager.sayara.landingpage.model.DriverProfile;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
+import com.voyager.sayara.landingpage.model.TripInfo;
 import com.voyager.sayara.landingpage.model.geogetpath.Route;
 import com.voyager.sayara.landingpage.presenter.IMapFragmentPresenter;
 import com.voyager.sayara.landingpage.presenter.MapFragmentPresenter;
@@ -84,6 +85,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -189,6 +191,8 @@ public class MapFragmentView extends Fragment implements
     TextView tripEndDestin;
     @BindView(R.id.tripAmount)
     TextView tripAmount;
+    @BindView(R.id.onTripStartUpLayout)
+    FrameLayout onTripStartUpLayout;
 
 
 
@@ -218,6 +222,7 @@ public class MapFragmentView extends Fragment implements
         View rootView = inflater.inflate(R.layout.map_ft_v1, container, false);
         System.out.println("MapFragmentView");
         this.rootView = rootView;
+        ButterKnife.bind(this, rootView);
         ApiKey = getString(R.string.place_api_key);
         tvMapSourceDestination = (LinearLayout) rootView.findViewById(R.id.tvMapSourceDestination);
         //------------ Car type Selection 1----------------
@@ -231,6 +236,9 @@ public class MapFragmentView extends Fragment implements
         truckImg = (ImageView) rootView.findViewById(R.id.truckImg);
         tCashAmt = (TextView) rootView.findViewById(R.id.tCashAmt);
         truckTypeTxt = (TextView) rootView.findViewById(R.id.truckTypeTxt);
+
+        //------------ On Trip StatUp  ----------------
+        onTripStartUpLayout = (FrameLayout) rootView.findViewById(R.id.onTripStartUpLayout);
 
         choseTripBackPress = (ImageButton) ((AppCompatActivity) getActivity()).findViewById(R.id.choseTripBackPress);
         choseTrip = (FrameLayout) rootView.findViewById(R.id.choseTrip);
@@ -489,10 +497,11 @@ public class MapFragmentView extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     onTripStartUp = data.getParcelableExtra("OnTripStartUp");
                     final DriverProfile driverProfile = onTripStartUp.getDriverProfile();
+                    final TripInfo tripInfo = onTripStartUp.getTripInfo();
                     Gson gson = new Gson();
                     String jsonString = gson.toJson(onTripStartUp);
                     System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString );
-                    driverHeaderLayout.setVisibility(View.VISIBLE);
+                    onTripStartUpLayout.setVisibility(View.VISIBLE);
                     try{
                         Picasso.with(getActivity())
                                 .load(driverProfile.getDriverPhone())
@@ -532,9 +541,10 @@ public class MapFragmentView extends Fragment implements
                     carName.setText(driverProfile.getCarName());
                     driverCity.setText(driverProfile.getDriverCity());
                     carNo.setText(driverProfile.getCarNumber());
-                    tripStartOrgin.setText(onTripStartUp.getPickupAddress());
-                    tripEndDestin.setText(onTripStartUp.getDropAddress());
-                    tripAmount.setText("");
+                    tripStartOrgin.setText(tripInfo.getPickupAddress());
+                    tripEndDestin.setText(tripInfo.getDropAddress());
+                    tripAmount.setText(tripInfo.getTripAmount());
+                    iMapFragmentPresenter.setOnTripStartUp(driverProfile.getDriverLocation(),tripInfo.getPickupLocation(),false,ApiKey,tripInfo.getPickupAddress());
                 }
                 break;
 
@@ -745,6 +755,83 @@ public class MapFragmentView extends Fragment implements
                     }
                     cash = (int) Math.floor((dist/1000) * cashPerKM);
                     cashAmt.setText("BD : " + cash);
+                } else {
+                    Toast.makeText(getActivity(), "Could not find path", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setDriverRoutes(List<List<HashMap<String, String>>> route,
+                                List<Route> routes,
+                                String driverLat,
+                                String driverLng,
+                                String pickUpLat,
+                                String pickUpLng,
+                                String pickUpLocName) {
+        System.out.println("MapFragmentView onActivityResult sourceLocationTxt : "+ sourceLocationTxt +
+                " destLat : "+destLat+
+                " destLong : "+destLong+
+                " sourceLat : "+sourceLat+
+                " sourceLong : "+sourceLong+
+                " originLng : "+originLng);
+        double driverLatD = Double.parseDouble(driverLat);
+        double driverLngD = Double.parseDouble(driverLng);
+        double pickUpLatD = Double.parseDouble(pickUpLat);
+        double pickUpLngD = Double.parseDouble(pickUpLng);
+
+
+        if (driverLatD > 0.0 && driverLngD > 0.0 && pickUpLatD > 0.0 && pickUpLngD > 0.0) {
+            System.out.println("MapFragmentView---IF");
+            if (mMap != null) {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(driverLatD, driverLngD))
+                        .title("From"))
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView("Driver Location")));
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(pickUpLatD, pickUpLngD))
+                        .title("To"))
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(pickUpLocName)));
+                ArrayList<LatLng> points = null;
+                PolylineOptions polyLineOptions = null;
+                // traversing through routes
+                double dist = 0;
+                Location srcLoc = new Location("");
+                Location destLoc = new Location("");
+                for (int i = 0; i < routes.size(); i++) {
+                    points = new ArrayList<LatLng>();
+                    polyLineOptions = new PolylineOptions();
+                    List<HashMap<String, String>> path = route.get(i);
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        if (destLoc.getLatitude() > 0) {
+                            destLoc.setLatitude(srcLoc.getLatitude());
+                            destLoc.setLongitude(srcLoc.getLongitude());
+                        } else {
+                            destLoc.setLatitude(lat);
+                            destLoc.setLongitude(lng);
+                        }
+                        srcLoc.setLatitude(lat);
+                        srcLoc.setLongitude(lng);
+                        dist = dist + destLoc.distanceTo(srcLoc);
+                        LatLng position = new LatLng(lat, lng);
+                        points.add(position);
+                    }
+                    zoomRoute(mMap,points);
+                    polyLineOptions.addAll(points);
+                    polyLineOptions.width(10);
+                    polyLineOptions.color(Color.DKGRAY);
+                }
+                frameLoaderLayout.setVisibility(View.GONE);
+                onTripStartUpLayout.setVisibility(View.VISIBLE);
+                iMapFragmentPresenter.hideVisibilityLayoutItems(View.INVISIBLE);
+                if (polyLineOptions != null) {
+                    System.out.println("MapFragmentView---polyLineOptions --IF");
+                    mMap.addPolyline(polyLineOptions);
                 } else {
                     Toast.makeText(getActivity(), "Could not find path", Toast.LENGTH_SHORT).show();
                 }

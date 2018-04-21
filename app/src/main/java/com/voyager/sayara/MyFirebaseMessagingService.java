@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
+import com.voyager.sayara.landingpage.model.TripInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,12 +62,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     System.out.println("----------- MyFirebaseMessagingService onMessageReceived fcmDetials" + json);
                     fcmPush = "fcm";
                     onTripStartUp = gson.fromJson(json, OnTripStartUp.class);
+                    TripInfo tripInfo = onTripStartUp.getTripInfo();
                     Intent intent = new Intent(getApplicationContext(), PulsatingActivity.class);
                     intent.putExtra("OnTripStartUp", onTripStartUp);
                     intent.putExtra("fcmPush", fcmPush);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    System.out.println("onTripStartUp onMessageReceived -- getTripId"+ onTripStartUp.getTripId());
+                    System.out.println("onTripStartUp onMessageReceived -- getTripId"+ tripInfo.getTripId());
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

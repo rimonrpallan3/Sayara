@@ -26,6 +26,15 @@ public class DriverProfile implements Parcelable {
     private String driverLocation;
     private String carNumber;
     private String driverCity;
+    private String driverRating;
+
+    public String getDriverRating() {
+        return driverRating;
+    }
+
+    public void setDriverRating(String driverRating) {
+        this.driverRating = driverRating;
+    }
 
     public String getCarNumber() {
         return carNumber;
@@ -106,6 +115,7 @@ public class DriverProfile implements Parcelable {
         dest.writeString(this.driverLocation);
         dest.writeString(this.carNumber);
         dest.writeString(this.driverCity);
+        dest.writeString(this.driverRating);
     }
 
     public DriverProfile() {
@@ -120,6 +130,7 @@ public class DriverProfile implements Parcelable {
         this.driverLocation = in.readString();
         this.carNumber = in.readString();
         this.driverCity = in.readString();
+        this.driverRating = in.readString();
     }
 
     public static final Creator<DriverProfile> CREATOR = new Creator<DriverProfile>() {

@@ -32,6 +32,10 @@ public class MapFragmentPresenter implements IMapFragmentPresenter{
     double originLatD;
     double originLngD;
     String tripDist ="";
+    String driverLat = "";
+    String driverlng = "";
+    String pickUpLat = "";
+    String pickUplng = "";
 
 
 
@@ -153,5 +157,64 @@ public class MapFragmentPresenter implements IMapFragmentPresenter{
     @Override
     public void hideVisibilityLayoutItems(int visibility) {
         iMapFragmentView.doVisibilityLayoutItems(visibility);
+    }
+
+    @Override
+    public void setOnTripStartUp(String driverLocation,String pickUpLocation,Boolean sensor,String ApiKey,final String pickUpLocName) {
+        String[] driveLoc = driverLocation.split(",");
+        String[] pickUpLoc = pickUpLocation.split(",");
+        for (int x=0; x<driveLoc.length; x++) {
+            System.out.println("x : "+x+" = "+driveLoc[x]);
+            driverLat = driveLoc[0];
+            driverlng = driveLoc[1];
+        }
+        for (int x=0; x<pickUpLoc.length; x++) {
+            System.out.println("x : "+x+" = "+pickUpLoc[x]);
+            pickUpLat = pickUpLoc[0];
+            pickUplng = pickUpLoc[1];
+        }
+
+        Retrofit retrofit = new ApiClient().getRetrofitClientPath();
+        WebServices webServices = retrofit.create(WebServices.class);
+        Call<GetPaths> call = webServices.getPaths(driverLocation, pickUpLocation, sensor,ApiKey);
+        call.enqueue(new Callback<GetPaths>() {
+            @Override
+            public void onResponse(Call<GetPaths> call, Response<GetPaths> response) {
+                GetPaths getPaths = response.body();
+                List<List<HashMap<String, String>>> route = new ArrayList<List<HashMap<String, String>>>();
+                List<Route> routes = getPaths.getRoutes();
+                for (int i = 0; i < routes.size(); i++) {
+                    List<HashMap<String, String>> path = new ArrayList<HashMap<String, String>>();
+                    List<Leg> legs = routes.get(i).getLegs();
+                    Distance distance = legs.get(0).getDistance();
+                    tripDist = distance.getText();
+                    for (int j = 0; j < legs.size(); j++) {
+                        List<Step> steps = legs.get(j).getSteps();
+                        for (int k = 0; k < steps.size(); k++) {
+                            String polyline = steps.get(k).getPolyline().getPoints();
+                            List<LatLng> latLngs = decodePoly(polyline);
+                            for (int l = 0; l < latLngs.size(); l++) {
+                                HashMap<String, String> hm = new HashMap<String, String>();
+                                hm.put("lat",
+                                        Double.toString(((LatLng) latLngs.get(l)).latitude));
+                                hm.put("lng",
+                                        Double.toString(((LatLng) latLngs.get(l)).longitude));
+                                path.add(hm);
+                            }
+                        }
+                    }
+                    route.add(path);
+                }
+                iMapFragmentView.setDriverRoutes(route,routes,driverLat,driverlng,pickUpLat,pickUplng,pickUpLocName);
+            }
+
+            @Override
+            public void onFailure(Call<GetPaths> call, Throwable t) {
+
+                t.printStackTrace();
+                //Toast.makeText((Context) iRegisterView, "ErrorMessage"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }
