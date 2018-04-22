@@ -194,6 +194,8 @@ public class MapFragmentView extends Fragment implements
     @BindView(R.id.onTripStartUpLayout)
     FrameLayout onTripStartUpLayout;
 
+    Boolean clicked = true;
+
 
 
     public MapFragmentView(Activity activity) {
@@ -628,6 +630,15 @@ public class MapFragmentView extends Fragment implements
                 break;
             case R.id.choseTripBackPress:
                 onBackPressFun();
+                break;
+            case R.id.onTripStartUpLayout:
+                if(clicked){
+                    driverBodyLayout.setVisibility(View.VISIBLE);
+                    clicked = false;
+                }else if(!clicked) {
+                    driverBodyLayout.setVisibility(View.GONE);
+                    clicked = true;
+                }
                 break;
         }
     }
