@@ -93,11 +93,10 @@
             android:theme="@style/AppTheme"/>
         <activity android:name="com.voyager.sayara.MapPlaceSearch.MapPlaceSearch"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
             android:theme="@style/AppTheme"/>
         <activity android:name="com.voyager.sayara.PulsatingActivity.PulsatingActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
 
         <service

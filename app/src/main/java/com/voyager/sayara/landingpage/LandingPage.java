@@ -432,11 +432,11 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
-        super.onBackPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             navigationView.getMenu().getItem(0);
             setDrawerState(true);
         }
+        super.onBackPressed();
 
     }
 
