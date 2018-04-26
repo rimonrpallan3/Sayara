@@ -15,4 +15,5 @@ public interface IMapFragmentView {
     void setDriverRoutes(List<List<HashMap<String, String>>> route, List<Route> routes, String driverLat,String driverLng,String pickUpLat,String pickUpLng, String pickUpLocName);
     void doVisibilityLayoutItems(int visibility);
     void getDriverCarDetails(List<Cars> cares,Boolean state);
+    void tripCanceled();
 }

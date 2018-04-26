@@ -9,6 +9,7 @@ import com.voyager.sayara.RetorHelper.OfferList;
 import com.voyager.sayara.fare.model.TripResponse;
 import com.voyager.sayara.landingpage.model.TripCarDetails;
 import com.voyager.sayara.landingpage.model.geogetpath.GetPaths;
+import com.voyager.sayara.landingpage.model.landingModel.EndTrip;
 import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.triphistroty.model.TripDetails;
 
@@ -83,6 +84,10 @@ public interface WebServices {
     @POST("user/driverProfile/")
     Call<DTDModel> getDriverProfileDetail(@Nullable @Field("driver_id") int userId,
                                                      @Nullable @Field("user_id") int tripId);
+    @FormUrlEncoded
+    @POST("user/cancelTrip/")
+    Call<EndTrip> stopStartUpTrip(@Nullable @Field("user_id") int userId,
+                                  @Nullable @Field("trip_id") int tripId);
 
     @FormUrlEncoded
     @POST("user/getCars/")

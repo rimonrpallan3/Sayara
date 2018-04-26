@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,12 +61,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.voyager.sayara.MapPlaceSearch.MapPlaceSearch;
-import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
-import com.voyager.sayara.PulsatingActivity.view.IPulsatingView;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
@@ -191,10 +193,15 @@ public class MapFragmentView extends Fragment implements
     TextView tripEndDestin;
     @BindView(R.id.tripAmount)
     TextView tripAmount;
+    @BindView(R.id.tripOnStartCancelImg)
+    ImageView tripOnStartCancelImg;
+    @BindView(R.id.tripSupportCallImg)
+    ImageView tripSupportCallImg;
     @BindView(R.id.onTripStartUpLayout)
-    FrameLayout onTripStartUpLayout;
+    LinearLayout onTripStartUpLayout;
 
     Boolean clicked = true;
+    public final static int REQUEST_PHONE_CALL = 121;
 
 
 
@@ -240,7 +247,7 @@ public class MapFragmentView extends Fragment implements
         truckTypeTxt = (TextView) rootView.findViewById(R.id.truckTypeTxt);
 
         //------------ On Trip StatUp  ----------------
-        onTripStartUpLayout = (FrameLayout) rootView.findViewById(R.id.onTripStartUpLayout);
+        onTripStartUpLayout = (LinearLayout) rootView.findViewById(R.id.onTripStartUpLayout);
 
         choseTripBackPress = (ImageButton) ((AppCompatActivity) getActivity()).findViewById(R.id.choseTripBackPress);
         choseTrip = (FrameLayout) rootView.findViewById(R.id.choseTrip);
@@ -262,12 +269,6 @@ public class MapFragmentView extends Fragment implements
             mprovider = locationManager.getBestProvider(criteria, false);
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return null;
             }
             location = locationManager.getLastKnownLocation(locationManager
@@ -277,7 +278,21 @@ public class MapFragmentView extends Fragment implements
             e.printStackTrace();
         }
 
+        final Drawable callIcon = new IconicsDrawable(getActivity())
+                .icon(CommunityMaterial.Icon.cmd_phone)
+                .color(ResourcesCompat.getColor(getResources(),R.color.iconColor,null))
+                .sizeDp(10);
+        final Drawable cancelIcon = new IconicsDrawable(getActivity())
+                .icon(CommunityMaterial.Icon.cmd_cancel)
+                .color(ResourcesCompat.getColor(getResources(),R.color.red,null))
+                .sizeDp(10);
+        tripOnStartCancelImg.setImageDrawable(cancelIcon);
+        tripSupportCallImg.setImageDrawable(callIcon);
+
         tvMapSourceDestination.setOnClickListener(this);
+        onTripStartUpLayout.setOnClickListener(this);
+        tripSupportCall.setOnClickListener(this);
+        tripCancel.setOnClickListener(this);
         fabLoc.setOnClickListener(this);
         btnRideNow.setOnClickListener(this);
         choseTripBackPress.setOnClickListener(this);
@@ -305,6 +320,17 @@ public class MapFragmentView extends Fragment implements
                     mMap.setMyLocationEnabled(true);
                 }
                 locationManager.requestLocationUpdates(provider, 0, 0, (android.location.LocationListener) getActivity());
+            }
+        }
+        switch (requestCode) {
+            case REQUEST_PHONE_CALL: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9895184339"));
+                    startActivity(intent);
+                } else {
+
+                }
+                return;
             }
         }
     }
@@ -560,13 +586,6 @@ public class MapFragmentView extends Fragment implements
         switch (v.getId()) {
             case R.id.fabLoc:
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
                 mFusedLocationClient.getLastLocation()
@@ -631,7 +650,24 @@ public class MapFragmentView extends Fragment implements
             case R.id.choseTripBackPress:
                 onBackPressFun();
                 break;
+            case R.id.tripSupportCall:
+                System.out.println("callCustomerCare -- -  : ");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
+                } else {
+                    startActivity(callIntent);
+                }
+                break;
+            case R.id.tripCancel:
+                driverBodyLayout.setVisibility(View.GONE);
+                onTripStartUpLayout.setVisibility(View.GONE);
+                clicked = true;
+                iMapFragmentPresenter.cancelOnStartTrip(userDetails.getUserID(), Integer.valueOf(onTripStartUp.getTripInfo().getTripId()));
+                break;
             case R.id.onTripStartUpLayout:
+                System.out.println("clicked: "+clicked);
                 if(clicked){
                     driverBodyLayout.setVisibility(View.VISIBLE);
                     clicked = false;
@@ -871,5 +907,12 @@ public class MapFragmentView extends Fragment implements
             System.out.println("driveCarId"+carId);
         }
 
+    }
+
+    @Override
+    public void tripCanceled() {
+        iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+        iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+        Toast.makeText(getActivity(), "Trip Canceled...", Toast.LENGTH_SHORT).show();
     }
 }

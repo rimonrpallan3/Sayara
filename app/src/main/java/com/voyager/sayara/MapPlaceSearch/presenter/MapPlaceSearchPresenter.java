@@ -105,7 +105,7 @@ public class MapPlaceSearchPresenter implements IMPSPresenter{
             public void onResponse(Call<PlaceDetail> call, Response<PlaceDetail> response) {
                 PlaceDetail placeDetail  = response.body();
                 Result result = placeDetail.getResult();
-                Geometry geometry =result.getGeometry();
+                Geometry geometry = result.getGeometry();
                 Location location = geometry.getLocation();
                 destinationLat = location.getLat();
                 destinationLng = location.getLng();
