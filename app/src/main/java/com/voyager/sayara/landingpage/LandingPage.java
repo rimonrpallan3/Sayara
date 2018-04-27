@@ -48,6 +48,7 @@ import com.voyager.sayara.SayaraApplication;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.drawerfragments.help.HelpFragment;
+import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.view.ILandingView;
 import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.triphistroty.TripHistory;
@@ -98,6 +99,9 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     String destinationPlaceId ="";
 
     Bundle bundle;
+
+    OnTripStartUp onTripStartUp;
+    String fcmPush = "";
 
 
     @Override
@@ -196,6 +200,28 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
             nav_user.setText(userDetails.getFName());
         }
 
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        System.out.println("onNewIntent Landing -------------");
+        onTripStartUp = (OnTripStartUp) intent.getParcelableExtra("OnTripStartUp");
+        fcmPush =  intent.getStringExtra("fcmPush");
+        System.out.println("onNewIntent Landing fcmPush-------------  "+fcmPush);
+        bundle.putParcelable("OnTripStartUp", onTripStartUp);
+        bundle.putString("fcmPush",fcmPush);
+        if(onTripStartUp!=null){
+            System.out.println("onNewIntent Landing ------------- inside  ");
+            Toast.makeText(getApplicationContext(), "Home Selected", Toast.LENGTH_SHORT).show();
+            MapFragmentView mapFragmentView = new MapFragmentView(this);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.landingContainer, mapFragmentView);
+            mapFragmentView.setArguments(bundle);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
 
     }
 

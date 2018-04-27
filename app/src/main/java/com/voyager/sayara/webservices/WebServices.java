@@ -88,6 +88,10 @@ public interface WebServices {
     @POST("user/cancelTrip/")
     Call<EndTrip> stopStartUpTrip(@Nullable @Field("user_id") int userId,
                                   @Nullable @Field("trip_id") int tripId);
+    @FormUrlEncoded
+    @POST("user/cancelTrip/")
+    Call<EndTrip> endOnGoingTrip(@Nullable @Field("user_id") int userId,
+                                  @Nullable @Field("trip_id") int tripId);
 
     @FormUrlEncoded
     @POST("user/getCars/")

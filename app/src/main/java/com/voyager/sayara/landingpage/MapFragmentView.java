@@ -17,7 +17,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -88,6 +87,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.voyager.sayara.common.Helper.REQUEST_PHONE_CUSTOMER_CALL;
+import static com.voyager.sayara.common.Helper.REQUEST_PHONE_SUPPORT_CALL;
 
 
 /**
@@ -171,10 +173,20 @@ public class MapFragmentView extends Fragment implements
     LinearLayout driverHeaderLayout;
     @BindView(R.id.driverBodyLayout)
     LinearLayout driverBodyLayout;
-    @BindView(R.id.tripSupportCall)
-    LinearLayout tripSupportCall;
-    @BindView(R.id.tripCancel)
-    LinearLayout tripCancel;
+    @BindView(R.id.layoutTripSupportCall)
+    LinearLayout layoutTripSupportCall;
+    @BindView(R.id.layoutTripCancel)
+    LinearLayout layoutTripCancel;
+    @BindView(R.id.layoutTripCancel)
+    LinearLayout layoutTripCustomerCallOngoing;
+    @BindView(R.id.layoutTripCustomerCallOngoing)
+    LinearLayout layoutTripSupportCallOngoing;
+    @BindView(R.id.layoutTripCancelOngoing)
+    LinearLayout layoutTripCancelOngoing;
+    @BindView(R.id.layoutTripOngoing)
+    LinearLayout layoutTripOngoing;
+    @BindView(R.id.layoutDriverWaiting)
+    LinearLayout layoutDriverWaiting;
     @BindView(R.id.driverCircleImageView)
     CircleImageView driverCircleImageView;
     @BindView(R.id.driverName)
@@ -193,15 +205,23 @@ public class MapFragmentView extends Fragment implements
     TextView tripEndDestin;
     @BindView(R.id.tripAmount)
     TextView tripAmount;
-    @BindView(R.id.tripOnStartCancelImg)
-    ImageView tripOnStartCancelImg;
-    @BindView(R.id.tripSupportCallImg)
-    ImageView tripSupportCallImg;
-    @BindView(R.id.onTripStartUpLayout)
-    LinearLayout onTripStartUpLayout;
+    @BindView(R.id.imgTripOnStartCancel)
+    ImageView imgTripOnStartCancel  ;
+    @BindView(R.id.imgTripSupportCall)
+    ImageView imgTripSupportCall;
+    @BindView(R.id.imgTripOngoingCustomer)
+    ImageView imgTripOngoingCustomer  ;
+    @BindView(R.id.imgTripOngoingSupport)
+    ImageView imgTripOngoingSupport;
+    @BindView(R.id.imgTripOngoingCancel)
+    ImageView imgTripOngoingCancel;
+    @BindView(R.id.layoutOnTripStartUp)
+    LinearLayout layoutOnTripStartUp;
 
     Boolean clicked = true;
-    public final static int REQUEST_PHONE_CALL = 121;
+    Bundle bundle;
+    String fcmPush ="";
+
 
 
 
@@ -232,10 +252,11 @@ public class MapFragmentView extends Fragment implements
         System.out.println("MapFragmentView");
         this.rootView = rootView;
         ButterKnife.bind(this, rootView);
+        bundle = this.getArguments();
         ApiKey = getString(R.string.place_api_key);
         tvMapSourceDestination = (LinearLayout) rootView.findViewById(R.id.tvMapSourceDestination);
         //------------ Car type Selection 1----------------
-        carMiniLayout = (LinearLayout) rootView.findViewById(R.id.carMiniLayout);
+        carMiniLayout = (LinearLayout) rootView.findViewById(R.id.layoutCarMini);
         carImg = (ImageView) rootView.findViewById(R.id.carImg);
         cashAmt = (TextView) rootView.findViewById(R.id.cashAmt);
         carTypeTxt = (TextView) rootView.findViewById(R.id.carTypeTxt);
@@ -247,7 +268,12 @@ public class MapFragmentView extends Fragment implements
         truckTypeTxt = (TextView) rootView.findViewById(R.id.truckTypeTxt);
 
         //------------ On Trip StatUp  ----------------
-        onTripStartUpLayout = (LinearLayout) rootView.findViewById(R.id.onTripStartUpLayout);
+        layoutOnTripStartUp = (LinearLayout) rootView.findViewById(R.id.layoutOnTripStartUp);
+        layoutTripCustomerCallOngoing = (LinearLayout) rootView.findViewById(R.id.layoutTripCustomerCallOngoing);
+        layoutTripSupportCallOngoing = (LinearLayout) rootView.findViewById(R.id.layoutTripSupportCallOngoing);
+        layoutTripCancelOngoing = (LinearLayout) rootView.findViewById(R.id.layoutTripCancelOngoing);
+        layoutTripOngoing = (LinearLayout) rootView.findViewById(R.id.layoutTripOngoing);
+        layoutDriverWaiting = (LinearLayout) rootView.findViewById(R.id.layoutDriverWaiting);
 
         choseTripBackPress = (ImageButton) ((AppCompatActivity) getActivity()).findViewById(R.id.choseTripBackPress);
         choseTrip = (FrameLayout) rootView.findViewById(R.id.choseTrip);
@@ -260,10 +286,39 @@ public class MapFragmentView extends Fragment implements
         mMapView.getMapAsync(this);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        Bundle bundle = this.getArguments();
         if (bundle != null) {
-            userDetails = bundle.getParcelable("UserDetails");
+            try {
+                userDetails = bundle.getParcelable("UserDetails");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
                 System.out.println("MapFragmentView -- UserDetails- userId : " + userDetails.getUserID());
+            try {
+                onTripStartUp = bundle.getParcelable("OnTripStartUp");
+                fcmPush = bundle.getString("fcmPush");
+                System.out.println(" ----------- HomeTabFragment fcmPush" + fcmPush);
+
+                if (fcmPush != null && fcmPush.length() > 1 && onTripStartUp.getTripStatus().equals("Ongoing")) {
+                    layoutDriverWaiting.setVisibility(View.GONE);
+                    layoutTripOngoing.setVisibility(View.VISIBLE);
+                    final DriverProfile driverProfile = onTripStartUp.getDriverProfile();
+                    final TripInfo tripInfo = onTripStartUp.getTripInfo();
+                    Gson gson = new Gson();
+                    String jsonString = gson.toJson(onTripStartUp);
+                    System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString );
+
+                } else if (fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("gone")) {
+                    if (layoutOnTripStartUp.getVisibility() == View.VISIBLE) {
+                        layoutDriverWaiting.setVisibility(View.VISIBLE);
+                        layoutTripOngoing.setVisibility(View.GONE);
+                        layoutOnTripStartUp.setVisibility(View.GONE);
+                        iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+                        iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         try {
             mprovider = locationManager.getBestProvider(criteria, false);
@@ -286,13 +341,21 @@ public class MapFragmentView extends Fragment implements
                 .icon(CommunityMaterial.Icon.cmd_cancel)
                 .color(ResourcesCompat.getColor(getResources(),R.color.red,null))
                 .sizeDp(10);
-        tripOnStartCancelImg.setImageDrawable(cancelIcon);
-        tripSupportCallImg.setImageDrawable(callIcon);
+        imgTripOnStartCancel.setImageDrawable(cancelIcon);
+        imgTripOngoingCancel.setImageDrawable(cancelIcon);
+        imgTripSupportCall.setImageDrawable(callIcon);
+        imgTripOngoingCustomer.setImageDrawable(callIcon);
+        imgTripOngoingSupport.setImageDrawable(callIcon);
 
         tvMapSourceDestination.setOnClickListener(this);
-        onTripStartUpLayout.setOnClickListener(this);
-        tripSupportCall.setOnClickListener(this);
-        tripCancel.setOnClickListener(this);
+        layoutOnTripStartUp.setOnClickListener(this);
+        layoutTripSupportCall.setOnClickListener(this);
+        layoutTripCustomerCallOngoing.setOnClickListener(this);
+        layoutTripSupportCallOngoing.setOnClickListener(this);
+        layoutTripCancelOngoing.setOnClickListener(this);
+        layoutTripOngoing.setOnClickListener(this);
+        layoutDriverWaiting.setOnClickListener(this);
+        layoutTripCancel.setOnClickListener(this);
         fabLoc.setOnClickListener(this);
         btnRideNow.setOnClickListener(this);
         choseTripBackPress.setOnClickListener(this);
@@ -323,7 +386,16 @@ public class MapFragmentView extends Fragment implements
             }
         }
         switch (requestCode) {
-            case REQUEST_PHONE_CALL: {
+            case REQUEST_PHONE_SUPPORT_CALL: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9895184339"));
+                    startActivity(intent);
+                } else {
+
+                }
+                return;
+            }
+            case REQUEST_PHONE_CUSTOMER_CALL: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9895184339"));
                     startActivity(intent);
@@ -529,7 +601,7 @@ public class MapFragmentView extends Fragment implements
                     Gson gson = new Gson();
                     String jsonString = gson.toJson(onTripStartUp);
                     System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString );
-                    onTripStartUpLayout.setVisibility(View.VISIBLE);
+                    layoutOnTripStartUp.setVisibility(View.VISIBLE);
                     try{
                         Picasso.with(getActivity())
                                 .load(driverProfile.getDriverPhone())
@@ -629,7 +701,7 @@ public class MapFragmentView extends Fragment implements
                 startActivityForResult(intent, Helper.SEARCH_MAP_API_TRIP);
                // Toast.makeText(getContext(),"This Features Ui is under Construction  ",Toast.LENGTH_LONG).show();
                 break;
-            case R.id.carMiniLayout:
+            case R.id.layoutCarMini:
                 truckImg.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.pick_up_grey));
                 tCashAmt.setTextColor(ContextCompat.getColor(getActivity(), R.color.hintHighLightText));
                 truckTypeTxt.setTextColor(ContextCompat.getColor(getActivity(), R.color.hintHighLightText));
@@ -650,23 +722,23 @@ public class MapFragmentView extends Fragment implements
             case R.id.choseTripBackPress:
                 onBackPressFun();
                 break;
-            case R.id.tripSupportCall:
+            case R.id.layoutTripSupportCall:
                 System.out.println("callCustomerCare -- -  : ");
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + "9895184339"));
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_SUPPORT_CALL);
                 } else {
                     startActivity(callIntent);
                 }
                 break;
-            case R.id.tripCancel:
+            case R.id.layoutTripCancel:
                 driverBodyLayout.setVisibility(View.GONE);
-                onTripStartUpLayout.setVisibility(View.GONE);
+                layoutOnTripStartUp.setVisibility(View.GONE);
                 clicked = true;
-                iMapFragmentPresenter.cancelOnStartTrip(userDetails.getUserID(), Integer.valueOf(onTripStartUp.getTripInfo().getTripId()));
+                iMapFragmentPresenter.tripCancelOnStart(userDetails.getUserID(), Integer.valueOf(onTripStartUp.getTripInfo().getTripId()));
                 break;
-            case R.id.onTripStartUpLayout:
+            case R.id.layoutOnTripStartUp:
                 System.out.println("clicked: "+clicked);
                 if(clicked){
                     driverBodyLayout.setVisibility(View.VISIBLE);
@@ -675,6 +747,34 @@ public class MapFragmentView extends Fragment implements
                     driverBodyLayout.setVisibility(View.GONE);
                     clicked = true;
                 }
+                break;
+            case R.id.layoutTripCustomerCallOngoing:
+                System.out.println("callCustomerCare -- -  : ");
+                callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CUSTOMER_CALL);
+                } else {
+                    startActivity(callIntent);
+                }
+                break;
+            case R.id.layoutTripSupportCallOngoing:
+                System.out.println("callCustomerCare -- -  : ");
+                callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_SUPPORT_CALL);
+                } else {
+                    startActivity(callIntent);
+                }
+                break;
+            case R.id.layoutTripCancelOngoing:
+                layoutDriverWaiting.setVisibility(View.VISIBLE);
+                layoutTripOngoing.setVisibility(View.GONE);
+                layoutOnTripStartUp.setVisibility(View.GONE);
+                iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+                iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+                iMapFragmentPresenter.tripOngoingEnded(userDetails.getUserID(), Integer.valueOf(onTripStartUp.getTripInfo().getTripId()));
                 break;
         }
     }
@@ -874,7 +974,7 @@ public class MapFragmentView extends Fragment implements
                     polyLineOptions.color(Color.DKGRAY);
                 }
                 frameLoaderLayout.setVisibility(View.GONE);
-                onTripStartUpLayout.setVisibility(View.VISIBLE);
+                layoutOnTripStartUp.setVisibility(View.VISIBLE);
                 iMapFragmentPresenter.hideVisibilityLayoutItems(View.INVISIBLE);
                 if (polyLineOptions != null) {
                     System.out.println("MapFragmentView---polyLineOptions --IF");
@@ -914,5 +1014,12 @@ public class MapFragmentView extends Fragment implements
         iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
         iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
         Toast.makeText(getActivity(), "Trip Canceled...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void tripOnGoingEnded() {
+        iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+        iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+        Toast.makeText(getActivity(), "Trip Ended...", Toast.LENGTH_SHORT).show();
     }
 }

@@ -220,7 +220,7 @@ public class MapFragmentPresenter implements IMapFragmentPresenter{
     }
 
     @Override
-    public void cancelOnStartTrip(Integer userId, Integer tripid) {
+    public void tripCancelOnStart(Integer userId, Integer tripid) {
         Retrofit retrofit = new ApiClient().getRetrofitClient();
         WebServices webServices = retrofit.create(WebServices.class);
         Call<EndTrip> call = webServices.stopStartUpTrip(userId,tripid);
@@ -230,6 +230,28 @@ public class MapFragmentPresenter implements IMapFragmentPresenter{
                 EndTrip endTrip = response.body();
                 System.out.println("-------MapFragmentPresenter -- onResponse: ");
                 iMapFragmentView.tripCanceled();
+            }
+
+            @Override
+            public void onFailure(Call<EndTrip> call, Throwable t) {
+
+                t.printStackTrace();
+                //Toast.makeText((Context) iRegisterView, "ErrorMessage"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void tripOngoingEnded(Integer userId, Integer tripid) {
+        Retrofit retrofit = new ApiClient().getRetrofitClient();
+        WebServices webServices = retrofit.create(WebServices.class);
+        Call<EndTrip> call = webServices.endOnGoingTrip(userId,tripid);
+        call.enqueue(new Callback<EndTrip>() {
+            @Override
+            public void onResponse(Call<EndTrip> call, Response<EndTrip> response) {
+                EndTrip endTrip = response.body();
+                System.out.println("-------MapFragmentPresenter -- onResponse: ");
+                iMapFragmentView.tripOnGoingEnded();
             }
 
             @Override

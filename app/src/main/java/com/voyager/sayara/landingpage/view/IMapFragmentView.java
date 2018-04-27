@@ -16,4 +16,5 @@ public interface IMapFragmentView {
     void doVisibilityLayoutItems(int visibility);
     void getDriverCarDetails(List<Cars> cares,Boolean state);
     void tripCanceled();
+    void tripOnGoingEnded();
 }

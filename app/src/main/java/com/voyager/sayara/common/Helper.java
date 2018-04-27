@@ -1,11 +1,13 @@
 package com.voyager.sayara.common;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,7 +41,7 @@ import java.io.IOException;
  * Created by User on 8/28/2017.
  */
 
- public class Helper {
+public class Helper {
 
     public static int REQUEST_LOCATION_CHECK_SETTINGS = 1;
     public static int DRIVER_LICENSE_FRONT = 2;
@@ -58,6 +61,8 @@ import java.io.IOException;
     public final static int SEARCH_MAP_API_TRIP = 517;
     public final static int GET_DRIVER = 717;
     public final static int REQUEST_PHONE_STATE = 33;
+    public final static int REQUEST_PHONE_SUPPORT_CALL = 121;
+    public final static int REQUEST_PHONE_CUSTOMER_CALL = 122;
 
     public static final int REQUEST_TAKE_PHOTO = 2;
     public static final int REQUEST_LOGEDIN = 222;
@@ -76,6 +81,16 @@ import java.io.IOException;
         String deviceUniqueIdentifier = null;
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (null != tm) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
             deviceUniqueIdentifier = tm.getDeviceId();
         }
         if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
