@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10"
         android:orientation="vertical">
 
         <LinearLayout
@@ -143,6 +144,14 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/driverBodyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -150,11 +159,10 @@
             android:background="@color/divider_dark_gray" />
 
         <LinearLayout
-            android:id="@+id/driverBodyLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <LinearLayout
@@ -284,7 +292,7 @@
                     android:background="@color/divider_dark_gray" />
 
                 <LinearLayout
-                    android:id="@+id/layoutTripSupportCallOngoing"
+                    android:id="@+id/layoutTripEmergencyCallOngoing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -494,6 +502,8 @@
 
             </FrameLayout>
 
+
+        </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

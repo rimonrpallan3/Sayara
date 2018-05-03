@@ -3,7 +3,9 @@ package com.voyager.sayara;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,9 +21,12 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
+import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.TripInfo;
+import com.voyager.sayara.landingpage.model.landingModel.Landing;
+import com.voyager.sayara.registerpage.model.UserDetails;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,11 +51,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     OnTripStartUp onTripStartUp;
     String fcmPush = "";
 
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
+
     public static final String FaithApp_PREFERENCES = "FaithApp_Prefs";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.i("PVL", "MESSAGE RECEIVED!!");
+        sharedPrefs = getSharedPreferences(Helper.OnTripStartUp,
+                Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
         if (remoteMessage.getData() != null) {
             System.out.println("RemoteMessage -- M"+remoteMessage.getData().get("message"));
             Gson gson = new Gson();
@@ -59,7 +70,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 JSONObject jsonObject = new JSONObject(remoteMessage.getData().get("message"));
                 String to = jsonObject.getString("tripStatus");
                 if (to.equals("Accepted")) {
-                    System.out.println("----------- MyFirebaseMessagingService onMessageReceived fcmDetials" + json);
+                    System.out.println("----------- MyFirebaseMessagingService onMessageReceived Accepted fcmDetials" + json);
                     fcmPush = "fcm";
                     onTripStartUp = gson.fromJson(json, OnTripStartUp.class);
                     TripInfo tripInfo = onTripStartUp.getTripInfo();
@@ -68,7 +79,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.putExtra("fcmPush", fcmPush);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    addTripDetialsGsonInSharedPrefrences(onTripStartUp);
                     System.out.println("onTripStartUp onMessageReceived -- getTripId"+ tripInfo.getTripId());
+                }else if(to.equals("Started")){
+                    System.out.println("----------- MyFirebaseMessagingService onMessageReceived Started fcmDetials" + json);
+                    fcmPush = "fcm";
+                    onTripStartUp = getTripDetails();
+                    //TripInfo tripInfo = onTripStartUp.getTripInfo();
+                    onTripStartUp.setTripStatus("Started");
+                    String jsonString = gson.toJson(onTripStartUp);
+                    Intent intent = new Intent(getApplicationContext(), LandingPage.class);
+                    intent.putExtra("OnTripStartUp", onTripStartUp);
+                    intent.putExtra("fcmPush", fcmPush);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    System.out.println("onMessageReceived --onTripStartUp : "+jsonString);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -121,6 +146,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }*/
         }
     }
+
+    private void addTripDetialsGsonInSharedPrefrences(OnTripStartUp onTripStartUp ){
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(onTripStartUp);
+        //UserDetails user1 = gson.fromJson(jsonString,UserDetails.class);
+        if(jsonString!=null) {
+            editor.putString("OnTripStartUp", jsonString);
+            editor.commit();
+            System.out.println("-----------addTripDetialsGsonInSharedPrefrences OnTripStartUp : "+jsonString);
+        }
+
+    }
+
+
+    private OnTripStartUp getTripDetails() {
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString("OnTripStartUp",null);
+        if(json!=null){
+            System.out.println("-----------LandingPage uploadProfileName OnTripStartUp : " + json);
+            onTripStartUp = gson.fromJson(json, OnTripStartUp.class);
+            //emailAddress = userDetails.getEmail();
+        }
+        return onTripStartUp;
+
+    }
+
 
     private void showNotification(String message) {
 

@@ -162,6 +162,7 @@ public class MapFragmentPresenter implements IMapFragmentPresenter{
 
     @Override
     public void setOnTripStartUp(String driverLocation,String pickUpLocation,Boolean sensor,String ApiKey,final String pickUpLocName) {
+        System.out.println("-------MapFragmentPresenter -- setOnTripStartUp: ");
         String[] driveLoc = driverLocation.split(",");
         String[] pickUpLoc = pickUpLocation.split(",");
         for (int x=0; x<driveLoc.length; x++) {

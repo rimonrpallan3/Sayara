@@ -88,16 +88,17 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        System.out.println("onNewIntent Landing -------------");
+        System.out.println("onNewIntent PulsatingActivity -------------");
         onTripStartUp = (OnTripStartUp) intent.getParcelableExtra("OnTripStartUp");
         fcmPush =  intent.getStringExtra("fcmPush");
-        System.out.println("onNewIntent Landing fcmPush-------------  "+fcmPush);
+        System.out.println("onNewIntent PulsatingActivity fcmPush-------------  "+fcmPush);
         bundle.putParcelable("OnTripStartUp", onTripStartUp);
         bundle.putString("fcmPush",fcmPush);
         if(onTripStartUp!=null){
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("OnTripStartUp", onTripStartUp);
-            setResult(Activity.RESULT_OK, resultIntent);
+            System.out.println("onNewIntent PulsatingActivity onTripStartUp not null-------------  ");
+            Intent intentParent = getIntent();
+            intentParent.putExtra("OnTripStartUp", onTripStartUp);
+            setResult(Activity.RESULT_OK, intentParent);
             finish();
         }
 

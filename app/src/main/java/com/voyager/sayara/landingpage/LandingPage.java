@@ -103,6 +103,8 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     OnTripStartUp onTripStartUp;
     String fcmPush = "";
 
+    MapFragmentView mapFragmentView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +181,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         addDrawerItems();
         setupDrawer();
         //------------ End of Navigation Drawer-----------------------------
-        MapFragmentView mapFragmentView = new MapFragmentView(this);
+        mapFragmentView = new MapFragmentView();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.landingContainer, mapFragmentView);
         bundle.putParcelable("UserDetails", userDetails);
@@ -215,7 +217,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         if(onTripStartUp!=null){
             System.out.println("onNewIntent Landing ------------- inside  ");
             Toast.makeText(getApplicationContext(), "Home Selected", Toast.LENGTH_SHORT).show();
-            MapFragmentView mapFragmentView = new MapFragmentView(this);
+            mapFragmentView = new MapFragmentView();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.landingContainer, mapFragmentView);
             mapFragmentView.setArguments(bundle);
