@@ -94,6 +94,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     System.out.println("onMessageReceived --onTripStartUp : "+jsonString);
+                }else if(to.equals("Stoped")){
+                    System.out.println("----------- MyFirebaseMessagingService onMessageReceived Stoped fcmDetials" + json);
+                    fcmPush = "fcm";
+                    onTripStartUp = getTripDetails();
+                    //TripInfo tripInfo = onTripStartUp.getTripInfo();
+                    onTripStartUp.setTripStatus("Stoped");
+                    String jsonString = gson.toJson(onTripStartUp);
+                    Intent intent = new Intent(getApplicationContext(), LandingPage.class);
+                    intent.putExtra("OnTripStartUp", onTripStartUp);
+                    intent.putExtra("fcmPush", fcmPush);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    System.out.println("onMessageReceived --onTripStartUp : "+jsonString);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

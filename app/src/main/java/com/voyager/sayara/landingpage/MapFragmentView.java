@@ -292,9 +292,7 @@ public class MapFragmentView extends Fragment implements
                 onTripStartUp = bundle.getParcelable("OnTripStartUp");
                 fcmPush = bundle.getString("fcmPush");
                 System.out.println(" ----------- HomeTabFragment fcmPush : " + fcmPush);
-                if (fcmPush != null && fcmPush.length() > 1 && onTripStartUp.getTripStatus() != null && onTripStartUp.getTripStatus().equals("Started")) {
-
-                  } else if (fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("gone")) {
+                if (fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Stoped")) {
                     if (layoutOnTripStartUp.getVisibility() == View.VISIBLE) {
                         layoutDriverWaiting.setVisibility(View.VISIBLE);
                         layoutTripOngoing.setVisibility(View.GONE);
@@ -434,7 +432,26 @@ public class MapFragmentView extends Fragment implements
 
                 }
             });
-        } else {
+        }else if(fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Stoped")){
+            mMap = googleMap;
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(mLocationRequest);
+            mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getActivity(), R.raw.map_json));
+            if (location == null) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(lat, log)).title("Marker"));
+                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat, log));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+                mMap.moveCamera(center);
+                mMap.animateCamera(zoom);
+            }
+            layoutDriverWaiting.setVisibility(View.VISIBLE);
+            layoutTripOngoing.setVisibility(View.GONE);
+            layoutOnTripStartUp.setVisibility(View.GONE);
+            iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+            iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+        }else {
             mMap = googleMap;
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                     .addLocationRequest(mLocationRequest);
