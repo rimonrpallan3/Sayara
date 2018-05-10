@@ -108,11 +108,12 @@ public class MapFragmentView extends Fragment implements
     EditText destEditText;
     LocationManager locationManager;
     String provider;
-    int cashPerKM = 10;
-    int cashMinimum = 20;
-    int cash;
+    double  cashPerKM = 0.650;
+    double  cashMinimum = 0.200;
+    double  cash;
     String distance = "";
     double distanceCal = 0.0;
+    double distancePerLit = 0.0;
     double sourceLat = 0.0;
     double sourceLong = 0.0;
     double destLat = 0.0;
@@ -556,11 +557,12 @@ public class MapFragmentView extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mMapView.onStart();
         if (!checkPermissions()) {
             requestPermissions();
         } else {
+            mMapView.onStart();
         }
+        mMapView.onStart();
     }
 
     @Override
@@ -657,7 +659,7 @@ public class MapFragmentView extends Fragment implements
         final TripInfo tripInfo = onTripStartUp.getTripInfo();
         try {
             Picasso.with(getActivity())
-                    .load(driverProfile.getDriverPhone())
+                    .load(driverProfile.getDriverPhoto())
                     .networkPolicy(NetworkPolicy.OFFLINE)
                     .resize(0, 200)
                     .into(driverCircleImageView, new Callback() {
@@ -670,7 +672,7 @@ public class MapFragmentView extends Fragment implements
                         public void onError() {
                             //Try again online if cache failed
                             Picasso.with(getActivity())
-                                    .load(driverProfile.getDriverPhone())
+                                    .load(driverProfile.getDriverPhoto())
                                     .error(R.drawable.profile)
                                     .resize(0, 200)
                                     .into(driverCircleImageView, new Callback() {
@@ -734,7 +736,7 @@ public class MapFragmentView extends Fragment implements
                 bundle.putString("driveCarType", driveCarType);
                 bundle.putString("driveCarId", driveCarId);
                 bundle.putParcelable("UserDetails", userDetails);
-                bundle.putInt("cost", cash);
+                bundle.putString("cost", String.format("%.3f", cash));
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Helper.GET_DRIVER);
                 onBackPressFun();
@@ -943,13 +945,13 @@ public class MapFragmentView extends Fragment implements
                     mMap.addPolyline(polyLineOptions);
                     distanceCal = Math.floor((dist / 1000));
                     Log.e("distance: ", distanceCal + "");
-                    if (distanceCal <= 1) {
+                    if (distanceCal < 1) {
                         cash = cashMinimum;
                     } else {
-                        cash = cashMinimum + (int) Math.floor((distanceCal - 1) * cashPerKM);
+                        cash = cashMinimum + (double) Math.floor((distanceCal - 1) * cashPerKM);
                     }
-                    cash = (int) Math.floor((dist / 1000) * cashPerKM);
-                    cashAmt.setText("BD : " + cash);
+                    cash = (double) Math.floor((dist / 1000) * cashPerKM);
+                    cashAmt.setText("BD : " + String.format("%.3f", cash));
                 } else {
                     Toast.makeText(getActivity(), "Could not find path", Toast.LENGTH_SHORT).show();
                 }

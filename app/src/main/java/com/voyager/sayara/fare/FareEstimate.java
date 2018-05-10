@@ -52,7 +52,7 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
     public String addressStart = "";
     public String addressEnd = "";
     public String driveClassType = "";
-    public int costFair = 0;
+    public String costFair = "";
     public String costFairSet = "";
     public String driveCarType = "";
     public String driveCarId = "";
@@ -79,12 +79,12 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
             nameEndLoc = bundle.getString("nameEndLoc",nameEndLoc);
             distanceKm = bundle.getString("distanceKm",distanceKm);
             driveClassType = bundle.getString("driveClassType",driveClassType);
-            costFair = bundle.getInt("cost",costFair);
+            costFair = bundle.getString("cost",costFair);
             driveCarType = bundle.getString("driveCarType",driveCarType);
             driveCarId = bundle.getString("driveCarId", driveCarId);
             userId = bundle.getInt("userId", 0);
             userDetails = bundle.getParcelable("UserDetails");
-            costFairSet =costFair+" DB";
+            costFairSet ="BD "+costFair;
             System.out.println(
                     "nameStart :"+nameStart+
                     "username :"+userDetails.getFName()+
