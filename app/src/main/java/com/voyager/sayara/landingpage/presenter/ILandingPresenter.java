@@ -5,4 +5,5 @@ package com.voyager.sayara.landingpage.presenter;
  */
 
 public interface ILandingPresenter {
+
 }

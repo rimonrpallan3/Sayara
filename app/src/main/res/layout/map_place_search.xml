@@ -73,7 +73,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/source_hint"
                     android:layout_marginRight="@dimen/_30"
-                    android:drawableRight="@drawable/ic_gps_fixed"
                     android:background="@drawable/edittext_selector" />
 
                 <EditText

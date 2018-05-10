@@ -1,13 +1,9 @@
 package com.voyager.sayara.MapPlaceSearch;
 
-import android.Manifest;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,19 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.voyager.sayara.MapPlaceSearch.Adapter.ListMapApiDirectionDestinationAdapter;
 import com.voyager.sayara.MapPlaceSearch.Adapter.ListMapApiDirectionSourceAdapter;
 import com.voyager.sayara.MapPlaceSearch.Adapter.SimpleDividerItemDecoration;
@@ -76,6 +66,8 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     List<CurrentPlaceDetails> currentPlaceDetailsList = new ArrayList<>();
+    float maxLikeHood = 0;
+    CurrentPlaceDetails maxCurrentPlaceDetails;
 
 
 
@@ -96,17 +88,26 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
         Intent intent = getIntent();
         bundle = new Bundle();
         userDetails = (UserDetails) intent.getParcelableExtra("UserDetails");
+        maxCurrentPlaceDetails = (CurrentPlaceDetails) intent.getParcelableExtra("CurrentPlaceDetails");
         if (userDetails != null) {
-            System.out.println("LandingPage -- UserDetails- name : " + userDetails.getFName());
-            System.out.println("LandingPage -- UserDetails- userId : " + userDetails.getUserID());
+            System.out.println("MapPlaceSearch -- UserDetails- name : " + userDetails.getFName());
+            System.out.println("MapPlaceSearch -- UserDetails- userId : " + userDetails.getUserID());
         }
-
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this, null);
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-
+        if(maxCurrentPlaceDetails.getPlaceName()!=null){
+            tvMapSource.setText(maxCurrentPlaceDetails.getPlaceName());
+            impsPresenter.setCurrentLoc(maxCurrentPlaceDetails.getLat(),maxCurrentPlaceDetails.getLng());
+            sourcePlaceId = maxCurrentPlaceDetails.getPlaceid();
+            sourceLocationTxt = maxCurrentPlaceDetails.getPlaceName();
+            sourceSet = true;
+            tvMapDestination.requestFocus();
+            Gson gson = new Gson();
+            String json2 = gson.toJson(maxCurrentPlaceDetails);
+            System.out.println("-----------MapPlaceSearch onCreate CurrentPlaceDetails : " + json2);
+            System.out.println("MapPlaceSearch onCreate -- maxCurrentPlaceDetails - not Null: ");
+        }else{
+            tvMapSource.requestFocus();
+            System.out.println("MapPlaceSearch onCreate -- maxCurrentPlaceDetails - Null: ");
+        }
         /*dictionaryWords = getListItemData();
         filteredList = new ArrayList<>();
         filteredList.addAll(dictionaryWords);
@@ -165,117 +166,12 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
         });
 
 
-
-        tvMapSource.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (tvMapSource.getRight() - tvMapSource.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (!checkPermissions()) {
-                            requestPermissions();
-                        } else {
-                            int permissionState = ActivityCompat.checkSelfPermission(getApplicationContext(),
-                                    android.Manifest.permission.ACCESS_FINE_LOCATION);
-                            Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
-                            placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
-                                @Override
-                                public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-                                    PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-                                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                                        CurrentPlaceDetails currentPlaceDetails = new CurrentPlaceDetails();
-                                        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                                                placeLikelihood.getPlace().getName(),
-                                                placeLikelihood.getPlace().getLatLng(),
-                                                placeLikelihood.getLikelihood()));
-                                        currentPlaceDetails.setLikehood(placeLikelihood.getLikelihood());
-                                        currentPlaceDetails.setLatLng(placeLikelihood.getPlace().getLatLng());
-                                        currentPlaceDetails.setPlaceName(placeLikelihood.getPlace().getName());
-                                        System.out.println("Name : "+placeLikelihood.getPlace().getName()+", Like hood : "+placeLikelihood.getLikelihood());
-                                        currentPlaceDetailsList.add(currentPlaceDetails);
-                                    }
-                                    likelyPlaces.release();
-                                }
-                            });
-
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-
     }
 
-    /**
-     * Shows a {@link Snackbar}.
-     *
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
-    }
-
-
-    private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-
-            showSnackbar(R.string.permission_rationale, android.R.string.ok,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(getParent(),
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    });
-
-        } else {
-            Log.i(TAG, "Requesting permission");
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
-            // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
-    /**
-     * Return the current state of the permissions needed.
-     */
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!checkPermissions()) {
-            requestPermissions();
-        } else {
-        }
     }
 
 
@@ -334,7 +230,6 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
         if(sourceSet&&destinationSet) {
             impsPresenter.getOriginLatLng(sourcePlaceId, destinationPlaceId, apiKey);
         }
-
     }
 
     @Override

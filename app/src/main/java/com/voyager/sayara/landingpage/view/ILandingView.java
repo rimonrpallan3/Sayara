@@ -1,5 +1,7 @@
 package com.voyager.sayara.landingpage.view;
 
+import com.voyager.sayara.MapPlaceSearch.model.CurrentPlaceDetails;
+
 /**
  * Created by User on 8/29/2017.
  */

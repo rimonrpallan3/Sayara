@@ -96,6 +96,12 @@ public class MapPlaceSearchPresenter implements IMPSPresenter{
         });
     }
 
+    @Override
+    public void setCurrentLoc(String pickUpLat, String pickUpLng) {
+        originLat =pickUpLat;
+        originLng =pickUpLng;
+    }
+
     public void getDestinationLatLng(String destinationPlaceId,String key){
         Retrofit retrofit = new ApiClient().getRetrofitClientPath();
         WebServices webServices = retrofit.create(WebServices.class);

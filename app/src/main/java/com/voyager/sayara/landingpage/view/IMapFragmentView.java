@@ -1,5 +1,6 @@
 package com.voyager.sayara.landingpage.view;
 
+import com.voyager.sayara.MapPlaceSearch.model.CurrentPlaceDetails;
 import com.voyager.sayara.landingpage.model.Cars;
 import com.voyager.sayara.landingpage.model.geogetpath.Route;
 
@@ -11,10 +12,11 @@ import java.util.List;
  */
 
 public interface IMapFragmentView {
-    void setRoutes(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist);
-    void setDriverRoutes(List<List<HashMap<String, String>>> route, List<Route> routes, String driverLat,String driverLng,String pickUpLat,String pickUpLng, String pickUpLocName);
+    void setRoutesTrip(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist);
+    void setRoutesDriverToPickUp(List<List<HashMap<String, String>>> route, List<Route> routes, String driverLat, String driverLng, String pickUpLat, String pickUpLng, String pickUpLocName);
     void doVisibilityLayoutItems(int visibility);
     void getDriverCarDetails(List<Cars> cares,Boolean state);
     void tripCanceled();
     void tripOnGoingEnded();
+    void highLikeHoodCurrentPlace(CurrentPlaceDetails maxCurrentPlaceDetails);
 }

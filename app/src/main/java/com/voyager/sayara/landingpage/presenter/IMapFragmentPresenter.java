@@ -9,8 +9,9 @@ import java.util.List;
 public interface IMapFragmentPresenter {
     void getTripDirection(final String originLat,final String originLng,  String destinationLat,String destinationLng, Boolean sensor, String ApiKey,Integer userId);
     void hideVisibilityLayoutItems(int visibility);
-    void setOnTripStartUp(String driverLocation,String pickUpLoc,Boolean sensor,String ApiKey, String pickUpLocName);
+    void getTripDriverToPickUp(String driverLocation, String pickUpLoc, Boolean sensor, String ApiKey, String pickUpLocName);
     void tripCancelOnStart(Integer userId, Integer tripid);
     void tripOngoingEnded(Integer userId, Integer tripid);
+    void getCurrentLocDetails();
 
 }

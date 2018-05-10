@@ -30,6 +30,18 @@ public class FarePresenter implements IFarePresenter{
         Retrofit retrofit = new ApiClient().getRetrofitClient();
         WebServices webServices = retrofit.create(WebServices.class);
         Call<TripResponse> call = webServices.startTrip(userId ,userName,nameStartLoc, nameStart,nameEndLoc, nameEnd,distanceKm,costFairSet,driveCarId,paymentType);
+        System.out.println("-------FarePresenter -- getTripDirection user_id : "+userId+
+        " ,user_name : "+userName+
+        " ,pickup_loc : "+nameStartLoc+
+        " ,pickup_address : "+nameStart+
+        " ,drop_loc : "+nameEndLoc+
+        " ,drop_address : "+nameEnd+
+        " ,distance : "+distanceKm+
+        " ,amount : "+costFairSet+
+        " ,car_id : "+driveCarId+
+        " ,pay_type : "+paymentType
+        );
+
         call.enqueue(new Callback<TripResponse>() {
             @Override
             public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {

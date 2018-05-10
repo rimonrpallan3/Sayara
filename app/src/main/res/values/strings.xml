@@ -27,6 +27,8 @@
     <string name="fill_txt">Fill the details below</string>
 
 
+
+
     <!--Opt First page -->
     <string name="otp_no">OTP Number</string>
     <string name="otp_spinner_country">Select Country</string>
@@ -113,6 +115,11 @@
     <string name="place_api_key">AIzaSyAepUY58DHLFMu6o0n4oynp5U9rAGkn94c</string>
 
     <!--Map Fragment page-->
+
+    <string name="phone_number_support">9895184339</string>
+    <string name="phone_number_customer">9895184339</string>
+    <string name="phone_number_emergency">9895184339</string>
+
 
     <string name="selected_place">Last Selected Place:</string>
     <string name="place_details">

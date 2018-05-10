@@ -11,29 +11,19 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class CurrentPlaceDetails implements Parcelable {
 
-    CharSequence placeName;
+    String  placeName;
     Float likehood;
-    LatLng latLng;
+    String lat;
+    String lng;
+    String placeid;
 
     public CurrentPlaceDetails() {
     }
 
-    public CharSequence getPlaceName() {
+
+    public String getPlaceName() {
         return placeName;
     }
-
-    public void setPlaceName(CharSequence placeName) {
-        this.placeName = placeName;
-    }
-
-    public LatLng getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
 
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
@@ -47,6 +37,29 @@ public class CurrentPlaceDetails implements Parcelable {
         this.likehood = likehood;
     }
 
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
+    }
+
+    public String getPlaceid() {
+        return placeid;
+    }
+
+    public void setPlaceid(String placeid) {
+        this.placeid = placeid;
+    }
 
     @Override
     public int describeContents() {
@@ -55,15 +68,19 @@ public class CurrentPlaceDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.placeName, flags);
-        dest.writeParcelable(this.latLng, flags);
+        dest.writeString(this.placeName);
         dest.writeValue(this.likehood);
+        dest.writeString(this.lat);
+        dest.writeString(this.lng);
+        dest.writeString(this.placeid);
     }
 
     protected CurrentPlaceDetails(Parcel in) {
-        this.placeName = in.readParcelable(CharSequence.class.getClassLoader());
-        this.latLng = in.readParcelable(LatLng.class.getClassLoader());
+        this.placeName = in.readString();
         this.likehood = (Float) in.readValue(Float.class.getClassLoader());
+        this.lat = in.readString();
+        this.lng = in.readString();
+        this.placeid = in.readString();
     }
 
     public static final Creator<CurrentPlaceDetails> CREATOR = new Creator<CurrentPlaceDetails>() {

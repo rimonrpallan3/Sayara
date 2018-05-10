@@ -25,6 +25,15 @@ public class TripInfo implements Parcelable {
     private String pickupLocation;
     private String dropAddress;
     private String tripStatus;
+    private String dropLoc;
+
+    public String getDropLoc() {
+        return dropLoc;
+    }
+
+    public void setDropLoc(String dropLoc) {
+        this.dropLoc = dropLoc;
+    }
 
     public String getPickupAddress() {
         return pickupAddress;
@@ -88,6 +97,7 @@ public class TripInfo implements Parcelable {
         dest.writeString(this.pickupLocation);
         dest.writeString(this.dropAddress);
         dest.writeString(this.tripStatus);
+        dest.writeString(this.dropLoc);
     }
 
     public TripInfo() {
@@ -100,6 +110,7 @@ public class TripInfo implements Parcelable {
         this.pickupLocation = in.readString();
         this.dropAddress = in.readString();
         this.tripStatus = in.readString();
+        this.dropLoc = in.readString();
     }
 
     public static final Parcelable.Creator<TripInfo> CREATOR = new Parcelable.Creator<TripInfo>() {

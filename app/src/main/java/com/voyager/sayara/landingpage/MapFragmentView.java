@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -65,6 +64,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.voyager.sayara.MapPlaceSearch.MapPlaceSearch;
+import com.voyager.sayara.MapPlaceSearch.model.CurrentPlaceDetails;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
@@ -118,8 +118,6 @@ public class MapFragmentView extends Fragment implements
     double destLat = 0.0;
     double destLong = 0.0;
     PolylineOptions polylineOptions;
-    String username;
-    SharedPreferences sharedPreferences;
     // ----------- Newly added
     LinearLayout tvMapSourceDestination;
     LocationRequest mLocationRequest;
@@ -152,6 +150,7 @@ public class MapFragmentView extends Fragment implements
     String originLng = "";
     String destinationLat = "";
     String destinationLng = "";
+    String destinationLatLng = "";
     String driveCarType = "carMini";
     String driveClassType = "Diamond";
     String ApiKey = "";
@@ -217,6 +216,8 @@ public class MapFragmentView extends Fragment implements
     Boolean clicked = true;
     Bundle bundle;
     String fcmPush = "";
+
+    CurrentPlaceDetails maxCurrentPlaceDetails;
 
     public MapFragmentView() {
 
@@ -351,7 +352,11 @@ public class MapFragmentView extends Fragment implements
         carImg.setOnClickListener(this);
         cashAmt.setOnClickListener(this);
         MapsInitializer.initialize(this.getActivity());
-        iMapFragmentPresenter = new MapFragmentPresenter(this);
+        iMapFragmentPresenter = new MapFragmentPresenter(this,getActivity(),TAG);
+        //iMapFragmentPresenter.getCurrentLocDetails();
+        Gson gson = new Gson();
+        String json2 = gson.toJson(maxCurrentPlaceDetails);
+        System.out.println("-----------MapFragmentView PlaceLikelihoodBufferResponse CurrentPlaceDetails : " + json2);
 
         /*Intent resultIntent = new Intent(getContext(), PulsatingActivity.class);
         resultIntent.putExtra("waitingForDriver", "true");
@@ -373,7 +378,7 @@ public class MapFragmentView extends Fragment implements
         switch (requestCode) {
             case REQUEST_PHONE_SUPPORT_CALL: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9895184339"));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getResources().getString(R.string.phone_number_support)));
                     startActivity(intent);
                 } else {
 
@@ -382,7 +387,7 @@ public class MapFragmentView extends Fragment implements
             }
             case REQUEST_PHONE_CUSTOMER_CALL: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9895184339"));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getResources().getString(R.string.phone_number_customer)));
                     startActivity(intent);
                 } else {
 
@@ -428,7 +433,7 @@ public class MapFragmentView extends Fragment implements
             googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                 public void onMapLoaded() {
                     //do stuff here
-                    iMapFragmentPresenter.setOnTripStartUp(driverProfile.getDriverLocation(), tripInfo.getPickupLocation(), false, ApiKey, tripInfo.getPickupAddress());
+                    iMapFragmentPresenter.getTripDriverToPickUp(driverProfile.getDriverLocation(), tripInfo.getDropLoc(), false, ApiKey, tripInfo.getDropAddress());
 
                 }
             });
@@ -593,16 +598,17 @@ public class MapFragmentView extends Fragment implements
                     iLandingView.hideVisibilityLandingItems(View.VISIBLE, "backImg");
                     choseTrip.setVisibility(View.VISIBLE);
                     sourceLocationTxt = data.getStringExtra("sourceLocationTxt");
-                    sourcePlaceId = data.getStringExtra("sourcePlaceId");
+                    sourcePlaceId = data.getStringExtra("currentPlaceId");
                     destinationLocationTxt = data.getStringExtra("destinationLocationTxt");
                     destinationPlaceId = data.getStringExtra("destinationPlaceId");
                     originLat = data.getStringExtra("originLat");
                     originLng = data.getStringExtra("originLng");
                     destinationLat = data.getStringExtra("destinationLat");
                     destinationLng = data.getStringExtra("destinationLng");
+                    destinationLatLng = destinationLat+","+destinationLng;
                     Integer userId = data.getIntExtra("userId", 0);
                     System.out.println("MapFragmentView onActivityResult sourceLocationTxt : " + sourceLocationTxt +
-                            " sourcePlaceId : " + sourcePlaceId +
+                            " currentPlaceId : " + sourcePlaceId +
                             " destinationLocationTxt : " + destinationLocationTxt +
                             " destinationPlaceId : " + destinationPlaceId +
                             " originLat : " + originLat +
@@ -633,7 +639,7 @@ public class MapFragmentView extends Fragment implements
                     String jsonString = gson.toJson(onTripStartUp);
                     System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString);
                     setTripStartDetails();
-                    iMapFragmentPresenter.setOnTripStartUp(driverProfile.getDriverLocation(), tripInfo.getPickupLocation(), false, ApiKey, tripInfo.getPickupAddress());
+                    iMapFragmentPresenter.getTripDriverToPickUp(driverProfile.getDriverLocation(), tripInfo.getPickupLocation(), false, ApiKey, tripInfo.getPickupAddress());
                 } else {
                     System.out.println("MapFragmentView onActivityResult GET_DRIVER requestCode : " + requestCode + ", resultCode : " + resultCode);
                 }
@@ -734,11 +740,9 @@ public class MapFragmentView extends Fragment implements
                 onBackPressFun();
                 break;
             case R.id.tvMapSourceDestination:
-                intent = new Intent(getActivity(), MapPlaceSearch.class);
-                bundle = new Bundle();
-                intent.putExtra("UserDetails", userDetails);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Helper.SEARCH_MAP_API_TRIP);
+                tvMapSourceDestination.setEnabled(false);
+                iMapFragmentPresenter.getCurrentLocDetails();
+
                 // Toast.makeText(getContext(),"This Features Ui is under Construction  ",Toast.LENGTH_LONG).show();
                 break;
             case R.id.layoutCarMini:
@@ -765,7 +769,7 @@ public class MapFragmentView extends Fragment implements
             case R.id.layoutTripSupportCall:
                 System.out.println("callCustomerCare -- -  : ");
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                callIntent.setData(Uri.parse("tel:" + getResources().getString(R.string.phone_number_support)));
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_SUPPORT_CALL);
                 } else {
@@ -791,7 +795,7 @@ public class MapFragmentView extends Fragment implements
             case R.id.layoutTripCustomerCallOngoing:
                 System.out.println("callCustomerCare -- -  : ");
                 callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                callIntent.setData(Uri.parse("tel:" + getResources().getString(R.string.phone_number_customer)));
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CUSTOMER_CALL);
                 } else {
@@ -801,7 +805,7 @@ public class MapFragmentView extends Fragment implements
             case R.id.layoutTripEmergencyCallOngoing:
                 System.out.println("callCustomerCare -- -  : ");
                 callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + "9895184339"));
+                callIntent.setData(Uri.parse("tel:" + getResources().getString(R.string.phone_number_emergency)));
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_SUPPORT_CALL);
                 } else {
@@ -878,7 +882,7 @@ public class MapFragmentView extends Fragment implements
     }
 
     @Override
-    public void setRoutes(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist) {
+    public void setRoutesTrip(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist) {
         distance = tripDist;
         System.out.println("MapFragmentView onActivityResult sourceLocationTxt : " + sourceLocationTxt +
                 " destLat : " + destLat +
@@ -954,14 +958,14 @@ public class MapFragmentView extends Fragment implements
     }
 
     @Override
-    public void setDriverRoutes(List<List<HashMap<String, String>>> route,
-                                List<Route> routes,
-                                String driverLat,
-                                String driverLng,
-                                String pickUpLat,
-                                String pickUpLng,
-                                String pickUpLocName) {
-        System.out.println("MapFragmentView setDriverRoutes pickUpLocName : " + pickUpLocName +
+    public void setRoutesDriverToPickUp(List<List<HashMap<String, String>>> route,
+                                        List<Route> routes,
+                                        String driverLat,
+                                        String driverLng,
+                                        String pickUpLat,
+                                        String pickUpLng,
+                                        String pickUpLocName) {
+        System.out.println("MapFragmentView setRoutesDriverToPickUp pickUpLocName : " + pickUpLocName +
                 " destLat : " + driverLat +
                 " destLong : " + driverLng +
                 " sourceLat : " + pickUpLat +
@@ -1070,5 +1074,20 @@ public class MapFragmentView extends Fragment implements
         iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
         setLocMethod();
         Toast.makeText(getActivity(), "Trip Ended...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void highLikeHoodCurrentPlace(CurrentPlaceDetails maxCurrentPlaceDetails) {
+        this.maxCurrentPlaceDetails = maxCurrentPlaceDetails;
+        Intent intent = new Intent(getActivity(), MapPlaceSearch.class);
+        bundle = new Bundle();
+        intent.putExtra("UserDetails", userDetails);
+        intent.putExtra("CurrentPlaceDetails", maxCurrentPlaceDetails);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Helper.SEARCH_MAP_API_TRIP);
+        Gson gson = new Gson();
+        String json2 = gson.toJson(maxCurrentPlaceDetails);
+        System.out.println("-----------MapFragmentView PlaceLikelihoodBufferResponse highLikeHoodCurrentPlace CurrentPlaceDetails : " + json2);
+        tvMapSourceDestination.setEnabled(true);
     }
 }
