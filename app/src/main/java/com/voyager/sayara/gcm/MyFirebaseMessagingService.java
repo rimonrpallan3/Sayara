@@ -1,4 +1,4 @@
-package com.voyager.sayara;
+package com.voyager.sayara.gcm;
 
 
 import android.app.NotificationManager;
@@ -16,17 +16,15 @@ import android.graphics.Rect;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
+import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.TripInfo;
-import com.voyager.sayara.landingpage.model.landingModel.Landing;
-import com.voyager.sayara.registerpage.model.UserDetails;
 
 import org.json.JSONArray;
 import org.json.JSONException;

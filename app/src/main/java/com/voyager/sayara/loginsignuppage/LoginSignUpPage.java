@@ -44,10 +44,14 @@ public class LoginSignUpPage extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Helper.REQUEST_LOGEDIN) {
             try{
-                String LoginDone = (String) data.getExtras().getString("LoginDone");
-                if(LoginDone!=null) {
-                    System.out.println("Onacivity has ben called ");
-                    finish();
+                if(data!=null) {
+                    String LoginDone = (String) data.getExtras().getString("LoginDone");
+                    if (LoginDone != null) {
+                        System.out.println("Onacivity has ben called ");
+                        finish();
+                    }
+                }else {
+                    System.out.println("LoginSignUpPage  onActivityResult null ");
                 }
             }catch (Exception e){
                 e.printStackTrace();

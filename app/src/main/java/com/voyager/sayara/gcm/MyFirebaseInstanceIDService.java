@@ -1,4 +1,4 @@
-package com.voyager.sayara;
+package com.voyager.sayara.gcm;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

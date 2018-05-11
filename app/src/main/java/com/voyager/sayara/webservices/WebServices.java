@@ -36,7 +36,7 @@ public interface WebServices {
     Call<OfferList> doGetUserList();
 
     @FormUrlEncoded
-    @POST("user/register/")
+    @POST("register/")
     public Call<UserDetails> registerUser(@Nullable @Field("name") String name,
                                           @Nullable @Field("password") String password,
                                           @Nullable @Field("email") String email,
@@ -44,13 +44,13 @@ public interface WebServices {
                                           @Nullable @Field("country") String country,
                                           @Nullable @Field("city") String city);
     @FormUrlEncoded
-    @POST("user/login/")
+    @POST("login/")
     public Call<UserDetails> loginUser(@Nullable @Field("email") String email,
                                      @Nullable @Field("password") String passwd,
                                        @Nullable @Field("token") String fireBaseToken);
 
     @FormUrlEncoded
-    @POST("user/updateProfile/")
+    @POST("updateProfile/")
     Call<UserDetails> updateProfile(@Nullable @Field("name") String name,
                                     @Nullable @Field("userID") int id,
                                     @Nullable @Field("password") String password,
@@ -58,50 +58,50 @@ public interface WebServices {
                                     @Nullable @Field("country") String country,
                                     @Nullable @Field("city") String city);
     @FormUrlEncoded
-    @POST("user/updateProfile/")
+    @POST("updateProfile/")
     Call<UserDetails> updateProfilePass(@Nullable @Field("password") String name,
                                     @Nullable @Field("user_id") int id);
     @FormUrlEncoded
-    @POST("user/updateProfile/")
+    @POST("updateProfile/")
     Call<UserDetails> updateProfileName(@Nullable @Field("name") String name,
                                         @Nullable @Field("user_id") int id,
                                         @Nullable @Field("password") String password,
                                         @Nullable @Field("city") String city);
     @FormUrlEncoded
-    @POST("user/updateProfile/")
+    @POST("updateProfile/")
     Call<UserDetails> updateProfilePhno(@Nullable @Field("phone") String name,
                                     @Nullable @Field("user_id") int id);
     @FormUrlEncoded
-    @POST("user/updateProfile/")
+    @POST("updateProfile/")
     Call<UserDetails> updateProfileCity(@Nullable @Field("city") String name,
                                     @Nullable @Field("user_id") int id);
     @FormUrlEncoded
-    @POST("user/tripHistory/")
+    @POST("tripHistory/")
     Call<List<TripDetails>> getTripHistory(@Field("user_id") int userId,
                                            @Nullable @Field("page") int page);
 
     @FormUrlEncoded
-    @POST("user/driverProfile/")
+    @POST("driverProfile/")
     Call<DTDModel> getDriverProfileDetail(@Nullable @Field("driver_id") int userId,
                                                      @Nullable @Field("user_id") int tripId);
     @FormUrlEncoded
-    @POST("user/cancelTrip/")
+    @POST("cancelTrip/")
     Call<EndTrip> stopStartUpTrip(@Nullable @Field("user_id") int userId,
                                   @Nullable @Field("trip_id") int tripId);
     @FormUrlEncoded
-    @POST("user/cancelTrip/")
+    @POST("cancelTrip/")
     Call<EndTrip> endOnGoingTrip(@Nullable @Field("user_id") int userId,
                                   @Nullable @Field("trip_id") int tripId);
 
     @FormUrlEncoded
-    @POST("user/getCars/")
+    @POST("getCars/")
     Call<TripCarDetails> getTripDetails(@Nullable @Field("pickup_loc") String latLng,
                                         @Nullable @Field("user_id") int userId);
     @POST("FCMUpdateServlet")
     public Call<UserDetails> updateFCMId(@Nullable @Field("user_id") int userId,
                                          @Nullable @Field("token") String token);
     @FormUrlEncoded
-    @POST("user/confirmTrip/")
+    @POST("confirmTrip/")
     public Call<TripResponse> startTrip(@Nullable @Field("user_id") int userId,
                                         @Nullable @Field("user_name") String userName,
                                         @Nullable @Field("pickup_loc") String nameStartLoc,
@@ -114,7 +114,7 @@ public interface WebServices {
                                         @Nullable @Field("pay_type") String paymentType);
 
     @Multipart
-    @POST("user/updateProfile/")
+    @POST("/updateProfile/")
     public Call<UserDetails> uploadProfileImg(@Part MultipartBody.Part  profileImg, @Part("user_id") RequestBody userID);
 
     @GET("place/autocomplete/json?")

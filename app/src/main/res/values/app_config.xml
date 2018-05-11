@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Crypto Key  -->
+    <string name="crypt_key"></string>
+
+    <!-- APP ADMOB -->
+    <string name="SHOW_ADS">false</string>
+    <string name="SHOW_ADS_IN_HOME">false</string>
+    <string name="SHOW_INTERSTITIAL_ADS_IN_STARTUP">false</string>
+    <string name="SHOW_ADS_IN_STORE">false</string>
+    <string name="SHOW_ADS_IN_EVENT">false</string>
+    <string name="SHOW_ADS_IN_OFFER">false</string>
+
+    <string name="ad_app_id"></string>
+    <!--Your Admob INTERSTITIAL ID-->
+    <string name="ad_interstitial_id"></string>
+    <!-- Your Admob banner unit ID-->
+    <string name="banner_ad_unit_id"></string>
+
+    <!--Set your google map key-->
+    <string name="map_api_key">AIzaSyAepUY58DHLFMu6o0n4oynp5U9rAGkn94c</string>
+
+    <string name="analytics"></string>
+    <!--Set Your Application name-->
+    <string name="app_name">Sayara</string>
+    <!--Set Your Application version -->
+    <string name="app_version">1.0</string>
+    <!-- BASE API URL (PLASE SET  LIKE THIS http://domain.com) -->
+    <string name="BASE_URL">http://betaholder.com/sayara/user/</string>
+
+    <!-- DEFAULT HOST -->
+    <string name="DEFAULT_HOST">www.betaholder.com</string>
+    <string name="DEFAULT_SCHEMA">http</string>
+
+    <!-- CHAT SERVER CONFIG -->
+    <string name="SERVER_ADDRESS_IP">http://betaholder.com:80</string>
+    <string name="SOCKET_SERVER_VERSION">1.0</string>
+
+    <!-- APP DESIGN -->
+    <!-- Set your theme color  -->
+    <item type="color" name="colorPrimary">#e3af12</item>
+    <item type="color" name="colorAccent">#fdd14c</item><!--Tab View-->
+    <item type="color" name="colorPrimaryDark">#000000</item><!--outer header_layoutader-->
+    <item type="color" name="colorPromo">#25323f</item>
+    <item type="color" name="iconColor">#fdd14c</item>
+    <item type="color" name="iconDisableColor">#c6c6c6</item>
+
+    <!-- ENABLE CHAT SERVICE -->
+    <string name="ENABLE_CHAT">false</string>
+    <string name="CHAT_WITH_FIREBASE">false</string>
+
+    <!-- DISPLAY MANAGE STORES VIA WEB -->
+    <string name="ENABLE_WEB_DASHBOARD">true</string>
+
+    <!-- DISPLAY RATE US ALERT DIALOG WHEN USE WANT EXIT FROM APP -->
+    <string name="RATE_US_ON_PLAY_STORE_FORCE">false</string>
+
+    <!-- ABOUT -->
+    <string name="ADDRESS_CONTACT">hr@itvoyager.com </string>
+    <string name="PHONE">+01 0000 000000</string>
+    <string name="ABOUT_CONTENT">NEARBYSTORES is an innovative local business search app with an intelligent search functionality
+        that can help you find different businesses in an area easily. </string>
+
+    <string-array name="tab_names">
+        <item>Sale</item>
+        <item>Chats</item>
+        <item>Stores</item>
+
+    </string-array>
+
+
+    <!-- DON'T CHANGE THAT -->
+    <integer-array name="tab_indexes">
+        <item>-6</item>
+        <item>-5</item>
+        <item>0</item>
+
+    </integer-array>
+
+
+</resources>

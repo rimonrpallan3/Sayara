@@ -61,6 +61,7 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     compile 'com.facebook.android:facebook-android-sdk:4.10.0'
     compile 'pl.bclogic:pulsator4droid:1.0.3'
+    compile 'com.norbsoft.typefacehelper:library:0.9.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.mikepenz:actionitembadge:3.3.2@aar'

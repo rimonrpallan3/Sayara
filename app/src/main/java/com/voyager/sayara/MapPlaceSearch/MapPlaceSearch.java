@@ -83,7 +83,7 @@ public class MapPlaceSearch extends AppCompatActivity implements IMapPlaceSearch
 
         tvMapSource = (EditText) findViewById(R.id.tvMapSource);
         tvMapDestination = (EditText) findViewById(R.id.tvMapDestination);
-        apiKey = getString(R.string.place_api_key);
+        apiKey = getString(R.string.map_api_key);
         impsPresenter = new MapPlaceSearchPresenter(this);
         Intent intent = getIntent();
         bundle = new Bundle();

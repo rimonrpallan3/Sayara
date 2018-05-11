@@ -58,7 +58,7 @@ public class RegisterPresenter implements IRegisterFetcher{
 
     @Override
     public void doRegister(String FullName, String Password,String RetypePassword,String email, String phno, String city, String country) {
-        System.out.println("FullName : "+FullName+" Password : "+Password+" RetypePassword : "+RetypePassword+" email : "+email+" phno : "+phno+" city : "+city+" country : "+country);
+        System.out.println("-------------------RegisterPresenter doRegister FullName : "+FullName+" Password : "+Password+" RetypePassword : "+RetypePassword+" email : "+email+" phno : "+phno+" city : "+city+" country : "+country);
         this.FullName = FullName;
         this.Password = Password;
         this.RetypePassword = RetypePassword;
@@ -84,6 +84,7 @@ public class RegisterPresenter implements IRegisterFetcher{
     }
 
     public void sendRegisteredDataAndValidateResponse(){
+        System.out.println("-------------------RegisterPresenter sendRegisteredDataAndValidateResponse FullName : "+FullName+" Password : "+Password+" RetypePassword : "+RetypePassword+" email : "+email+" phno : "+phno+" city : "+city+" country : "+country);
         Retrofit retrofit = new ApiClient().getRetrofitClient();
         WebServices webServices = retrofit.create(WebServices.class);
         Call<UserDetails> call = webServices.registerUser(FullName,Password,email,phno,country,city);
@@ -97,7 +98,7 @@ public class RegisterPresenter implements IRegisterFetcher{
                 userDetails.setPhno(phno);
                 userDetails.setCountry(country);
                 userDetails.setCity(city);
-                System.out.println("-------sendRegisteredDataAndValidateResponse  FullName : " + FullName +
+                System.out.println("------- sendRegisteredDataAndValidateResponse  FullName : " + FullName +
                         " Password : " + Password +
                         " email Address : " + email +
                         " phno : " + phno +

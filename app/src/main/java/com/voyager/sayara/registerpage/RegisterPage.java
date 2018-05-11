@@ -1,5 +1,6 @@
 package com.voyager.sayara.registerpage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -180,6 +181,9 @@ public class RegisterPage extends AppCompatActivity implements IRegisterView{
         System.out.println("Name : "+userDetails.getFName());
         Intent intent = new Intent(this, LandingPage.class);
         intent.putExtra("UserDetails", userDetails);
+        Intent intentParent = getIntent();
+        intentParent.putExtra("LoginDone", "done");
+        setResult(Activity.RESULT_OK, intentParent);
         startActivity(intent);
         finish();
     }

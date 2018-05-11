@@ -205,7 +205,6 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         mapFragmentView = new MapFragmentView();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.landingContainer, mapFragmentView);
-        fragmentTransaction.addToBackStack(null);
         bundle.putParcelable("UserDetails", userDetails);
         mapFragmentView.setArguments(bundle);
         fragmentTransaction.commit();

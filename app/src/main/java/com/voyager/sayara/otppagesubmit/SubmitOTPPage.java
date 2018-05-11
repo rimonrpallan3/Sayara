@@ -1,5 +1,6 @@
 package com.voyager.sayara.otppagesubmit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -61,11 +62,14 @@ import com.voyager.sayara.registerpage.RegisterPage;
         edtOPTNo.setEnabled(true);
         btnSubmit.setEnabled(true);
         if (result) {
+            Intent oldIntent = getIntent();
             Intent intent = new Intent(this, RegisterPage.class);
             intent.putExtra("Country",country);
             intent.putExtra("ZipCode",zipCode);
             intent.putExtra("PhoneNo",PhoneNo);
            // intent.putExtra("LoginSignUpPage", (Serializable) loginSignUpPage);
+            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            setResult(Activity.RESULT_OK, oldIntent);
             startActivity(intent);
             finish();
         } else {
