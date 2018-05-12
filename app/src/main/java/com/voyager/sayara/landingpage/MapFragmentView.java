@@ -440,6 +440,7 @@ public class MapFragmentView extends Fragment implements
             });
         }else if(fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Stoped")){
             System.out.println("MapFragmentView push Trip Stoped : ");
+            mMap.clear();
             mMap = googleMap;
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                     .addLocationRequest(mLocationRequest);
@@ -447,6 +448,7 @@ public class MapFragmentView extends Fragment implements
                     MapStyleOptions.loadRawResourceStyle(
                             getActivity(), R.raw.map_json));
             if (location == null) {
+
                 mMap.addMarker(new MarkerOptions().position(new LatLng(lat, log)).title("Marker"));
                 CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat, log));
                 CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
@@ -459,22 +461,18 @@ public class MapFragmentView extends Fragment implements
             iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
             iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
         }else if (location == null) {
-            System.out.println("MapFragmentView push when null : "+location);
             mMap = googleMap;
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                     .addLocationRequest(mLocationRequest);
             mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             getActivity(), R.raw.map_json));
-
+            System.out.println("MapFragmentView push when null : "+location);
                 mMap.addMarker(new MarkerOptions().position(new LatLng(lat, log)).title("Marker"));
                 CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat, log));
                 CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
                 mMap.moveCamera(center);
                 mMap.animateCamera(zoom);
-
-
-
 
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
@@ -562,10 +560,6 @@ public class MapFragmentView extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        if (!checkPermissions()) {
-            requestPermissions();
-        } else {
-        }
         mMapView.onStart();
     }
 
@@ -880,6 +874,7 @@ public class MapFragmentView extends Fragment implements
     }
 
     public void setLocMethod() {
+        mMap.clear();
         mMap.addMarker(new MarkerOptions().position(new LatLng(lat, log)).title("Marker"));
         CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(lat, log));
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);

@@ -54,6 +54,11 @@ public class SplashScreen extends AppCompatActivity implements ISplashView {
         mPresenter.load();
         fireBaseToken = FirebaseInstanceId.getInstance().getToken();
         System.out.println("----------- onCreate ----------fireBaseToken: " + fireBaseToken);
+        if(Helper.isLocationEnabled(this)) {
+
+        }else {
+            Helper.toEnabledLocation(this,this);
+        }
 
     }
 
