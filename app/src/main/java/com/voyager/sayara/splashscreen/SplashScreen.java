@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,11 @@ import com.voyager.sayara.loginsignuppage.LoginSignUpPage;
 import com.voyager.sayara.splashscreen.presenter.SplashPresenter;
 import com.voyager.sayara.splashscreen.view.ISplashView;
 
+import java.util.List;
+
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
 import static com.voyager.sayara.common.Helper.REQUEST_PHONE_STATE;
 
 
@@ -31,7 +37,7 @@ import static com.voyager.sayara.common.Helper.REQUEST_PHONE_STATE;
  * Created by User on 8/23/2017.
  */
 
-public class SplashScreen extends AppCompatActivity implements ISplashView {
+public class SplashScreen extends AppCompatActivity implements ISplashView,EasyPermissions.PermissionCallbacks{
 
     private SplashPresenter mPresenter;
     SharedPreferences sharedPrefs;
@@ -95,8 +101,13 @@ public class SplashScreen extends AppCompatActivity implements ISplashView {
         return deviceUniqueIdentifier;
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // EasyPermissions handles the request result.
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         switch (requestCode) {
             case REQUEST_PHONE_STATE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -152,6 +163,18 @@ public class SplashScreen extends AppCompatActivity implements ISplashView {
                 mPresenter.load();
             }
 
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
         }
     }
 }

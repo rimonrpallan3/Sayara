@@ -23,6 +23,7 @@
     <string name="emil_address">Email Address</string>
     <string name="full_name">Full Name</string>
     <string name="fill_txt">Fill the details below</string>
+    <string name="permission_location_check">We need this pemission to read documents from device.</string>
 
 
 
@@ -135,5 +136,8 @@
     </string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+
+
 
 </resources>

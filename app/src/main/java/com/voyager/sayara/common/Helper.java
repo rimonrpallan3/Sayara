@@ -64,11 +64,17 @@ public class Helper {
     public final static int REQUEST_PHONE_STATE = 33;
     public final static int REQUEST_PHONE_SUPPORT_CALL = 121;
     public final static int REQUEST_PHONE_CUSTOMER_CALL = 122;
+    public static final int RC_LOCATION_PERM_SIGIN = 321;
+    public static final int RC_LOCATION_PERM_SIGUP = 322;
 
     public static final int REQUEST_TAKE_PHOTO = 2;
     public static final int REQUEST_LOGEDIN = 222;
     public static final String FCM_ID = "fcm_id";
     public static final String USER_NAME = "user_name";
+    public final static String PERMISSIONS_LOCATION_COARSE =
+            Manifest.permission.ACCESS_COARSE_LOCATION;
+    public final static String PERMISSIONS_LOCATION_FINE =
+            Manifest.permission.ACCESS_FINE_LOCATION;
 
 
     public static boolean isNetworkAvailable(Context context) {
