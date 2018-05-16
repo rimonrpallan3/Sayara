@@ -274,6 +274,7 @@ public class Helper {
         return inSampleSize;
     }
 
+
     public String getFilename() {
         File file = new File(Environment.getExternalStorageDirectory().getPath(), "MyFolder/Images");
         if (!file.exists()) {

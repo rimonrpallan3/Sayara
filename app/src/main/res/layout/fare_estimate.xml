@@ -161,7 +161,7 @@
 
 
                         <TextView
-                            android:id="@+id/pickCity"
+                            android:id="@+id/pickCityStart"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -236,7 +236,7 @@
 
 
                         <TextView
-                            android:id="@+id/pickCity"
+                            android:id="@+id/pickCityEnd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -357,28 +357,37 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="20dp"
+                    android:layout_height="@dimen/_40"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginTop="@dimen/_30"
+                    android:layout_marginRight="@dimen/_20"
+                    android:layout_marginLeft="@dimen/_20"
+                    android:layout_marginBottom="@dimen/_20"
                     android:weightSum="100">
 
                     <Button
                         android:id="@+id/btnAccept"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:layout_weight="48"
                         android:textAllCaps="false"
                         android:background="@drawable/rectangle_button"
                         android:text="@string/accept_txt"
+                        android:textSize="@dimen/_12"
                         android:textColor="#FFF" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:background="@color/divider_line"
+                        android:layout_height="wrap_content" />
 
                     <Button
                         android:id="@+id/btnReject"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/_12"
+                        android:layout_weight="48"
                         android:textAllCaps="false"
                         android:background="@drawable/rectangle_button"
                         android:text="@string/reject_txt"

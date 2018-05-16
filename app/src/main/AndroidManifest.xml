@@ -18,6 +18,10 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
+    <permission
+        android:name="com.voyager.sayara.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.voyager.sayara.permission.MAPS_RECEIVE"/>
     <application
         android:name=".SayaraApplication"
         android:fullBackupContent="false"
@@ -38,7 +42,7 @@
             </intent-filter>
         </activity>
 
-
+        <uses-library android:name="com.google.android.maps" />
         <activity android:name="com.voyager.sayara.registerpage.RegisterPage"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
@@ -142,12 +146,14 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_api_key"/>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_api_key"/>
         
     </application>
 

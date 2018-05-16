@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.voyager.sayara.PulsatingActivity.PulsatingActivity;
 import com.voyager.sayara.R;
+import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.fare.presenter.FarePresenter;
 import com.voyager.sayara.fare.presenter.IFarePresenter;
 import com.voyager.sayara.fare.view.IFareView;
@@ -183,8 +184,8 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
         Intent resultIntent = new Intent(this, PulsatingActivity.class);
         resultIntent.putExtra("waitingForDriver", "true");
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        setResult(Activity.RESULT_OK, resultIntent);
-        startActivity(resultIntent);
+        setResult(RESULT_OK, resultIntent);
+        startActivity (resultIntent);
         finish();
     }
 }

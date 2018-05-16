@@ -3,6 +3,7 @@ package com.voyager.sayara.PulsatingActivity;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -95,14 +96,15 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
         bundle.putParcelable("OnTripStartUp", onTripStartUp);
         bundle.putString("fcmPush",fcmPush);
         if(onTripStartUp!=null){
-            System.out.println("onNewIntent PulsatingActivity onTripStartUp not null-------------  ");
-            Intent intentParent = getIntent();
+            System.out.println("onNewIntent PulsatingActivity onTripStartUp not null -------------  ");
+            Intent intentParent = new Intent();
             intentParent.putExtra("OnTripStartUp", onTripStartUp);
-            setResult(Activity.RESULT_OK, intentParent);
+            setResult(RESULT_OK, intentParent);
             finish();
         }
 
     }
+
 
 
     public boolean onOptionsItemSelected(MenuItem item) {

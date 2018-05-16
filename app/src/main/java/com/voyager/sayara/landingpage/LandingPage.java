@@ -1,22 +1,17 @@
 package com.voyager.sayara.landingpage;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -37,12 +32,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -53,12 +42,13 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.voyager.sayara.MapPlaceSearch.model.CurrentPlaceDetails;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.drawerfragments.help.HelpFragment;
+import com.voyager.sayara.landingpage.adapter.DrawerListAdapter;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
+import com.voyager.sayara.landingpage.model.drawerList.DrawerItems;
 import com.voyager.sayara.landingpage.presenter.ILandingPresenter;
 import com.voyager.sayara.landingpage.presenter.LandingPresenter;
 import com.voyager.sayara.landingpage.view.ILandingView;
@@ -69,7 +59,10 @@ import com.voyager.sayara.updateprofile.presenter.UpProfilePresenter;
 import com.voyager.sayara.fare.FareEstimate;
 import com.voyager.sayara.fragments.map.helper.onSomeEventListener;
 
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -120,6 +113,8 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     MapFragmentView mapFragmentView;
 
+
+    DrawerListAdapter drawerListAdapter;
 
 
 
@@ -174,11 +169,12 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
         //  Navigation Drawer
         navigationView = (NavigationView) findViewById(R.id.navigationView);
+
         Menu menu = navigationView.getMenu();
         MenuItem profileImg = menu.findItem(R.id.updateProfile);
         MenuItem infoTripImg = menu.findItem(R.id.infoTrip);
-        MenuItem helpImg = menu.findItem(R.id.help);
-       /* ImageView infoImg = (ImageView) hView1.findViewById(R.id.infoTrip);
+        MenuItem helpImg = menu.findItem(R.id.help);/*
+        ImageView infoImg = (ImageView) hView1.findViewById(R.id.infoTrip);
         ImageView helpImg = (ImageView) hView2.findViewById(R.id.help);*/
         final Drawable profileIcon = new IconicsDrawable(this)
                 .icon(CommunityMaterial.Icon.cmd_account)
@@ -222,7 +218,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
             System.out.println("LandingPage -- UserDetails Share- fcm : " + userDetails.getFcm());
             nav_user.setText(userDetails.getFName());
         }
-
+        //drawerListAdapter = new DrawerListAdapter(getData(),this);
 
 
 
@@ -331,6 +327,34 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
             mDrawerToggle.syncState();
             this.getSupportActionBar().setHomeButtonEnabled(false);
         }
+    }
+
+    List<DrawerItems> drawerItems = Arrays.asList();
+
+    public List<DrawerItems> getData(){
+
+        drawerItems = new ArrayList<DrawerItems>();
+
+        DrawerItems homeItem =  new DrawerItems();
+        homeItem.setName(getResources().getString(R.string.drawer_update_profile));
+        homeItem.setIconDraw(MaterialDrawableBuilder.IconValue.ACCOUNT);
+        homeItem.setID(1);
+
+
+        DrawerItems catItem = new DrawerItems();
+        catItem.setName(getResources().getString(R.string.drawer_your_trips));
+        catItem.setIconDraw(MaterialDrawableBuilder.IconValue.INFORMATION);
+        catItem.setID(2);
+
+
+        DrawerItems savesItem = new DrawerItems();
+        //savesItem.setName(getResources().getString(R.string.Favoris)+" /*("+bookmaeks_count+")*/");
+        savesItem.setName(getResources().getString(R.string.drawer_help));
+        savesItem.setIconDraw(MaterialDrawableBuilder.IconValue.HELP);
+        savesItem.setID(3);
+
+
+        return drawerItems;
     }
 
     /**
@@ -580,8 +604,9 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         fragment.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case Helper.SEARCH_MAP_API_TRIP:
+            case Helper.GET_DRIVER:
                 if (resultCode == Activity.RESULT_OK) {
+                    System.out.println("LandingPage onActivityResult GET_DRIVER : ");
                 }
                 break;
 

@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 
@@ -51,14 +53,16 @@ public class SplashScreen extends AppCompatActivity implements ISplashView {
                 Context.MODE_PRIVATE);
         editor = sharedPrefs.edit();
         mPresenter = new SplashPresenter(this, this, this, sharedPrefs, editor);
-        mPresenter.load();
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            mPresenter.load();
+        }else {
+            mPresenter.load();
+        }
         fireBaseToken = FirebaseInstanceId.getInstance().getToken();
         System.out.println("----------- onCreate ----------fireBaseToken: " + fireBaseToken);
-        if(Helper.isLocationEnabled(this)) {
 
-        }else {
-            Helper.toEnabledLocation(this,this);
-        }
 
     }
 
@@ -140,7 +144,14 @@ public class SplashScreen extends AppCompatActivity implements ISplashView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Helper.REQUEST_LOCATION_CHECK_SETTINGS) {
-            mPresenter.load();
+            if ( Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                mPresenter.load();
+            }else {
+                mPresenter.load();
+            }
+
         }
     }
 }
