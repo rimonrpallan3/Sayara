@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,12 +18,15 @@ import android.widget.Toast;
 
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
+import com.voyager.sayara.common.NetworkDetector;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.loginsignuppage.LoginSignUpPage;
 import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.registerpage.presenter.IRegisterFetcher;
 import com.voyager.sayara.registerpage.presenter.RegisterPresenter;
 import com.voyager.sayara.registerpage.view.IRegisterView;
+
+import static com.voyager.sayara.common.Helper.REQUEST_REGISTERED;
 
 /**
  * Created by User on 8/23/2017.
@@ -83,14 +87,20 @@ public class RegisterPage extends AppCompatActivity implements IRegisterView{
     }
 
     public void btnRegister(View v){
-        btnRegister.setEnabled(false);
-        iRegisterFetcher.doRegister(edtFullName.getText().toString(),
-                edtPassword.getText().toString(),
-                edtRetypePassword.getText().toString(),
-                edtEmailAddress.getText().toString(),
-                txtViewPhoneNo.getText().toString(),
-                edtCity.getText().toString(),
-                country.toString());
+        if(NetworkDetector.haveNetworkConnection(this)){
+            //Snackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.snack_error_network_available), Snackbar.LENGTH_SHORT).show();
+            btnRegister.setEnabled(false);
+            iRegisterFetcher.doRegister(edtFullName.getText().toString(),
+                    edtPassword.getText().toString(),
+                    edtRetypePassword.getText().toString(),
+                    edtEmailAddress.getText().toString(),
+                    txtViewPhoneNo.getText().toString(),
+                    edtCity.getText().toString(),
+                    country.toString());
+        }else {
+            Snackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.snack_error_network), Snackbar.LENGTH_LONG).show();
+
+        }
     }
 
     @Override
@@ -181,10 +191,10 @@ public class RegisterPage extends AppCompatActivity implements IRegisterView{
         System.out.println("Name : "+userDetails.getFName());
         Intent intent = new Intent(this, LandingPage.class);
         intent.putExtra("UserDetails", userDetails);
-        Intent intentParent = getIntent();
-        intentParent.putExtra("LoginDone", "done");
-        setResult(Activity.RESULT_OK, intentParent);
+        intent.putExtra("LoginDone", "done");
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+        setResult(REQUEST_REGISTERED);
         finish();
     }
 

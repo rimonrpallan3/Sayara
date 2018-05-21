@@ -24,6 +24,8 @@
     <string name="full_name">Full Name</string>
     <string name="fill_txt">Fill the details below</string>
     <string name="permission_location_check">We need this pemission to read documents from device.</string>
+    <string name="snack_error_network">Please turn on your net.</string>
+
 
 
 
@@ -92,9 +94,15 @@
 
     <!--Custom Dialog Box-->
 
+    <!--Custom Dialog Box Document Page-->
+
     <string name="gallery">\u0020 \u0020 \u0020 Gallery</string>
     <string name="camera">\u0020 \u0020 \u0020 Camera</string>
     <string name="cancel">Cancel</string>
+
+
+    <!--Custom Dialog Box Trip -->
+    <string name="question_cond">Do you really want to exit ?</string>
 
     <!--StartTrip Page-->
     <string name="estimated_money_content">Estimated Cash to Be Paid</string>

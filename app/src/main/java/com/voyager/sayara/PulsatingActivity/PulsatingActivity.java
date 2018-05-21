@@ -5,21 +5,27 @@ import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.voyager.sayara.MapPlaceSearch.view.IMapPlaceSearchView;
 import com.voyager.sayara.PulsatingActivity.presenter.IPulsatingPresenter;
 import com.voyager.sayara.PulsatingActivity.presenter.PulsatingPresenter;
 import com.voyager.sayara.PulsatingActivity.view.IPulsatingView;
 import com.voyager.sayara.R;
+import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
+import com.voyager.sayara.registerpage.model.UserDetails;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
@@ -35,6 +41,9 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
     String fcmPush = "";
     Bundle bundle;
 
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
+
     IPulsatingPresenter iPulsatingPresenter;
 
     public PulsatingActivity() {
@@ -49,6 +58,9 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
         bundle = new Bundle();
         Intent intent =getIntent();
         Bundle bundle = intent.getExtras();
+        sharedPrefs = getSharedPreferences(Helper.OnTripStartUp,
+                Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
         if(!bundle.isEmpty()){
            // nameStart = bundle.getString("nameStart",nameStart);
 
@@ -97,14 +109,30 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
         bundle.putString("fcmPush",fcmPush);
         if(onTripStartUp!=null){
             System.out.println("onNewIntent PulsatingActivity onTripStartUp not null -------------  ");
-            Intent intentParent = new Intent();
+            Intent intentParent = new Intent("custom-event-name");
             intentParent.putExtra("OnTripStartUp", onTripStartUp);
+            addTripDetailsGsonInSharedPrefrences(onTripStartUp);
+            Log.d("sender", "Broadcasting message");
+            // You can also include some extra data.
+            intent.putExtra("message", "This is my message!");
             setResult(RESULT_OK, intentParent);
             finish();
         }
 
     }
 
+    private void addTripDetailsGsonInSharedPrefrences(OnTripStartUp onTripStartUp){
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(onTripStartUp);
+        //UserModel user1 = gson.fromJson(jsonString,UserModel.class);
+        if(jsonString!=null) {
+            editor.putString("OnTripStartUp", jsonString);
+            editor.commit();
+            System.out.println("-----------PulsatingActivity addTripDetailsGsonInSharedPrefrences  onTripStartUp : "+jsonString);
+
+        }
+
+    }
 
 
     public boolean onOptionsItemSelected(MenuItem item) {

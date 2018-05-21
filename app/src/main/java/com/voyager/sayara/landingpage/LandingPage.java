@@ -47,6 +47,7 @@ import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.drawerfragments.help.HelpFragment;
 import com.voyager.sayara.landingpage.adapter.DrawerListAdapter;
+import com.voyager.sayara.landingpage.helper.BackHandledFragment;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.drawerList.DrawerItems;
 import com.voyager.sayara.landingpage.presenter.ILandingPresenter;
@@ -70,7 +71,7 @@ import java.util.List;
  * Created by User on 8/30/2017.
  */
 
-public class LandingPage extends AppCompatActivity implements View.OnClickListener, onSomeEventListener, ILandingView {
+public class LandingPage extends AppCompatActivity implements View.OnClickListener, onSomeEventListener, ILandingView , BackHandledFragment.BackHandlerInterface {
 
     Activity activity;
     public Toolbar toolbar;
@@ -119,6 +120,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
 
     ILandingPresenter iLandingPresenter;
+    private BackHandledFragment selectedFragment;
 
 
     @Override
@@ -511,8 +513,13 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     public void onBackPressed() {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            System.out.println("back stack entry count : "+getSupportFragmentManager().getBackStackEntryCount());
             navigationView.getMenu().getItem(0);
             setDrawerState(true);
+        }
+        if(selectedFragment == null || !selectedFragment.onBackPressed()) {
+            // Selected fragment did not consume the back press event.
+            super.onBackPressed();
         }
         super.onBackPressed();
 
@@ -623,5 +630,10 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         }else if(value.equals("backImg")){
             choseTripBackPress.setVisibility(visibility);
         }
+    }
+
+    @Override
+    public void setSelectedFragment(BackHandledFragment backHandledFragment) {
+        this.selectedFragment = selectedFragment;
     }
 }

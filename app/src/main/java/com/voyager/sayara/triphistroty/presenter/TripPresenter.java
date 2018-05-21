@@ -38,7 +38,7 @@ public class TripPresenter implements ITripPresenter {
         Retrofit retrofit = new ApiClient().getRetrofitClient();
         WebServices webServices = retrofit.create(WebServices.class);
 
-        Call<List<TripDetails>> call = webServices.getTripHistory(21,1);
+        Call<List<TripDetails>> call = webServices.getTripHistory(userId,1);
         call.enqueue(new Callback<List<TripDetails>>() {
             @Override
             public void onResponse(Call<List<TripDetails>> call, Response<List<TripDetails>> response) {

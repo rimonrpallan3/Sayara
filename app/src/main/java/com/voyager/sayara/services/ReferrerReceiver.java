@@ -19,6 +19,7 @@ public class ReferrerReceiver extends BroadcastReceiver {
     private String MEDIUM   = "utm_medium";
     private String CONTENT  = "utm_content";
     private String TERM     = "utm_term";
+    public static String ACTION     = "custom-event-name";
     @Override
     public void onReceive(Context context, Intent intent) {
 

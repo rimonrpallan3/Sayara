@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
+import com.voyager.sayara.common.NetworkDetector;
 import com.voyager.sayara.firstotppage.FirstOTPPage;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.registerpage.model.UserDetails;
@@ -63,9 +65,16 @@ public class SignInPage extends AppCompatActivity implements ISignInView {
 
    public void btnSubmit(View v){
        Helper.hideKeyboard(this);
-       iLoginPresenter.setProgressBarVisiblity(View.VISIBLE);
-       btnSubmit.setEnabled(false);
-       iLoginPresenter.doLogin(edtEmailPhno.getText().toString(), edtPswd.getText().toString(),fireBaseToken);
+       if(NetworkDetector.haveNetworkConnection(this)){
+           //Snackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.snack_error_network_available), Snackbar.LENGTH_SHORT).show();
+           iLoginPresenter.setProgressBarVisiblity(View.VISIBLE);
+           btnSubmit.setEnabled(false);
+           iLoginPresenter.doLogin(edtEmailPhno.getText().toString(), edtPswd.getText().toString(),fireBaseToken);
+       }else {
+           Snackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.snack_error_network), Snackbar.LENGTH_LONG).show();
+
+       }
+
    }
 
     public void SignUp(View v){

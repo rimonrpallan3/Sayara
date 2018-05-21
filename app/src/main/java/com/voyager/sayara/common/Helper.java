@@ -69,6 +69,7 @@ public class Helper {
 
     public static final int REQUEST_TAKE_PHOTO = 2;
     public static final int REQUEST_LOGEDIN = 222;
+    public static final int REQUEST_REGISTERED = 212;
     public static final String FCM_ID = "fcm_id";
     public static final String USER_NAME = "user_name";
     public final static String PERMISSIONS_LOCATION_COARSE =

@@ -3,6 +3,7 @@
 
     <!--Firebase Notification-->
     <color name="default_notification_color">#fdd14c</color>
+    <color name="button_rectangle_color">#ffa500</color>
 
     <!--Highlight Text Color-->
     <color name="highLightText">#ffa500</color>

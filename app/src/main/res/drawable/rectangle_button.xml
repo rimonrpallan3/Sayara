@@ -9,7 +9,7 @@
         android:topLeftRadius="0dp"
         android:topRightRadius="0dp" />
 
-    <solid android:color="#ffa500" />
+    <solid android:color="@color/button_rectangle_color" />
 
     <padding
         android:bottom="0dp"

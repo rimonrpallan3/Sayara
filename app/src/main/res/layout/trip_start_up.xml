@@ -324,7 +324,7 @@
                     android:background="@color/divider_dark_gray" />
 
                 <LinearLayout
-                    android:id="@+id/layoutTripCancelOngoing"
+                    android:id="@+id/layoutOngoingTripCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

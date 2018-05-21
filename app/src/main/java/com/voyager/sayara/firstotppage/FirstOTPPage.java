@@ -100,14 +100,13 @@ import java.io.Serializable;
         edtPhNo.setEnabled(true);
         btnGetOtp.setEnabled(true);
         if (result) {
-            Intent oldIntent = getIntent();
             Intent intent = new Intent(FirstOTPPage.this, SubmitOTPPage.class);
             intent.putExtra("Country",spinnerSelectContry.getSelectedItem().toString());
             intent.putExtra("ZipCode",edtZipCode.getText().toString());
             intent.putExtra("PhoneNo",edtPhNo.getText().toString());
             //intent.putExtra("LoginSignUpPage", (Serializable) loginSignUpPage);
             intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-            setResult(Activity.RESULT_OK, oldIntent);
+            setResult(Activity.RESULT_OK, intent);
             startActivity(intent);
             finish();
         } else {

@@ -7,18 +7,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.voyager.sayara.R;
+import com.voyager.sayara.landingpage.helper.BackHandledFragment;
 
 /**
  * Created by User on 28-Sep-17.
  */
 
-public class HelpFragment extends Fragment implements View.OnClickListener{
+public class HelpFragment extends BackHandledFragment implements View.OnClickListener{
 
 
 
     public HelpFragment() {
     }
 
+
+    @Override
+    public String getTagText() {
+        return null;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        getActivity().getFragmentManager().popBackStack();
+        return false;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

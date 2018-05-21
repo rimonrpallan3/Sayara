@@ -45,7 +45,7 @@ public class LoginSignUpPage extends AppCompatActivity implements EasyPermission
     public  void btnSignUp(View v){
         if (EasyPermissions.hasPermissions(this, Helper.PERMISSIONS_LOCATION_COARSE,Helper.PERMISSIONS_LOCATION_FINE)) {
             Intent intent = new Intent(this, FirstOTPPage.class);
-            startActivityForResult(intent,Helper.REQUEST_LOGEDIN);
+            startActivityForResult(intent,Helper.REQUEST_REGISTERED);
         } else {
             // Ask for one permission
             EasyPermissions.requestPermissions(this, getString(R.string.permission_location_check),
@@ -69,7 +69,7 @@ public class LoginSignUpPage extends AppCompatActivity implements EasyPermission
                 if(data!=null) {
                     String LoginDone = (String) data.getExtras().getString("LoginDone");
                     if (LoginDone != null) {
-                        System.out.println("Onacivity has ben called ");
+                        System.out.println("onActivityResult REQUEST_LOGEDIN has ben called ");
                         finish();
                     }
                 }else {
@@ -80,6 +80,9 @@ public class LoginSignUpPage extends AppCompatActivity implements EasyPermission
             }
 
 
+        }else if (requestCode == Helper.REQUEST_REGISTERED){
+            System.out.println("onActivityResult REQUEST_REGISTERED has ben called ");
+            finish();
         }
     }
 

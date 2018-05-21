@@ -16,6 +16,7 @@ public interface IMapFragmentView {
     void setRoutesDriverToPickUp(List<List<HashMap<String, String>>> route, List<Route> routes, String driverLat, String driverLng, String pickUpLat, String pickUpLng, String pickUpLocName);
     void doVisibilityLayoutItems(int visibility);
     void getDriverCarDetails(List<Cars> cares,Boolean state);
+    void dialogueYesClickListener(String function);
     void tripCanceled();
     void tripOnGoingEnded();
     void highLikeHoodCurrentPlace(CurrentPlaceDetails maxCurrentPlaceDetails);

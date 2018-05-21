@@ -254,6 +254,11 @@ public class MapFragmentPresenter implements IMapFragmentPresenter {
     }
 
     @Override
+    public void dialogueYesClickListener(String function) {
+        iMapFragmentView.dialogueYesClickListener(function);
+    }
+
+    @Override
     public void tripCancelOnStart(Integer userId, Integer tripid) {
         Retrofit retrofit = new ApiClient().getRetrofitClient();
         WebServices webServices = retrofit.create(WebServices.class);

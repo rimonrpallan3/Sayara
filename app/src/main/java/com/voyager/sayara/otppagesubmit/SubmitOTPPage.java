@@ -62,14 +62,13 @@ import com.voyager.sayara.registerpage.RegisterPage;
         edtOPTNo.setEnabled(true);
         btnSubmit.setEnabled(true);
         if (result) {
-            Intent oldIntent = getIntent();
             Intent intent = new Intent(this, RegisterPage.class);
             intent.putExtra("Country",country);
             intent.putExtra("ZipCode",zipCode);
             intent.putExtra("PhoneNo",PhoneNo);
            // intent.putExtra("LoginSignUpPage", (Serializable) loginSignUpPage);
             intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-            setResult(Activity.RESULT_OK, oldIntent);
+            setResult(Activity.RESULT_OK, intent);
             startActivity(intent);
             finish();
         } else {
