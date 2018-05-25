@@ -7,32 +7,31 @@
     <FrameLayout
         android:id="@+id/nav_header_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200"
+        android:layout_height="@dimen/_120"
         android:layout_alignParentTop="true"
-        android:background="@color/nav_drawer_header_bag_color"
-        android:padding="@dimen/_16">
+        android:background="@color/nav_drawer_header_bag_color">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_gravity="left|center"
+            android:orientation="horizontal">
 
             <com.voyager.sayara.costom.CircleImageView
                 android:id="@+id/customerProfileDrawerImg"
                 android:layout_width="@dimen/_80"
                 android:layout_height="@dimen/_80"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_15"
+                android:layout_marginLeft="@dimen/_20"
                 android:src="@drawable/profile" />
 
             <TextView
                 android:id="@+id/customerProfileDrawerTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|bottom"
+                android:layout_gravity="center"
                 android:text="Guest User"
-                android:layout_marginTop="@dimen/_10"
+                android:layout_marginLeft="@dimen/_20"
                 android:textSize="@dimen/_16"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/black" />
@@ -55,8 +54,5 @@
 
     </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/drawerList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 </LinearLayout>

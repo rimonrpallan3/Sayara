@@ -1263,4 +1263,11 @@ public class MapFragmentView extends BackHandledFragment implements
         System.out.println("-----------MapFragmentView PlaceLikelihoodBufferResponse highLikeHoodCurrentPlace CurrentPlaceDetails : " + json2);
         tvMapSourceDestination.setEnabled(true);
     }
+
+    @Override
+    public void pushTripStarted(OnTripStartUp onTripStartUp) {
+        Gson gson = new Gson();
+        String json2 = gson.toJson(onTripStartUp);
+        System.out.println("-----------MapFragmentView pushTripStarted  onTripStartUp: " + json2);
+    }
 }

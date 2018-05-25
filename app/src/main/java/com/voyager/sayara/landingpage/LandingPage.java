@@ -21,6 +21,9 @@ import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -49,10 +52,12 @@ import com.voyager.sayara.drawerfragments.help.HelpFragment;
 import com.voyager.sayara.landingpage.adapter.DrawerListAdapter;
 import com.voyager.sayara.landingpage.helper.BackHandledFragment;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
+import com.voyager.sayara.landingpage.model.drawerHeader.HeaderItem;
 import com.voyager.sayara.landingpage.model.drawerList.DrawerItems;
 import com.voyager.sayara.landingpage.presenter.ILandingPresenter;
 import com.voyager.sayara.landingpage.presenter.LandingPresenter;
 import com.voyager.sayara.landingpage.view.ILandingView;
+import com.voyager.sayara.landingpage.view.IMapFragmentView;
 import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.triphistroty.TripHistory;
 import com.voyager.sayara.updateprofile.UpdateProfile;
@@ -71,7 +76,10 @@ import java.util.List;
  * Created by User on 8/30/2017.
  */
 
-public class LandingPage extends AppCompatActivity implements View.OnClickListener, onSomeEventListener, ILandingView , BackHandledFragment.BackHandlerInterface {
+public class LandingPage extends AppCompatActivity implements View.OnClickListener,
+        onSomeEventListener,
+        ILandingView,
+        BackHandledFragment.BackHandlerInterface, DrawerListAdapter.ClickListener {
 
     Activity activity;
     public Toolbar toolbar;
@@ -102,10 +110,10 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     FrameLayout landingContainer;
     ImageButton choseTripBackPress;
 
-    String sourceLocation ="";
-    String currentPlaceId ="";
-    String destinationLocation ="";
-    String destinationPlaceId ="";
+    String sourceLocation = "";
+    String currentPlaceId = "";
+    String destinationLocation = "";
+    String destinationPlaceId = "";
 
     Bundle bundle;
 
@@ -117,18 +125,20 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     DrawerListAdapter drawerListAdapter;
 
-
+    IMapFragmentView iMapFragmentView;
+    private Fragment fragment;
 
     ILandingPresenter iLandingPresenter;
     private BackHandledFragment selectedFragment;
+    RecyclerView drawerList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Do something for lollipop and above versions
             LayoutInflaterCompat.setFactory2(getLayoutInflater(), new IconicsLayoutInflater2(getDelegate()));
-        } else{
+        } else {
             LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
             // do something for phones running an SDK before lollipop
         }
@@ -153,10 +163,9 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
             System.out.println("LandingPage -- UserDetails- name : " + userDetails.getFName());
             System.out.println("LandingPage -- UserDetails- Id : " + userDetails.getUserID());
             System.out.println("LandingPage -- UserDetails- fcm : " + userDetails.getFcm());
-        }else if(hiddenBtn!=null){
-            // do nothing ///
-        }
-        else {
+        } else if (hiddenBtn != null) {
+            // do nothing //
+        } else {
             getUserSDetails();
         }
 
@@ -171,13 +180,17 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
         //  Navigation Drawer
         navigationView = (NavigationView) findViewById(R.id.navigationView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        customerProfileDrawerImg = (CircleImageView) findViewById(R.id.customerProfileDrawerImg);
+        customerProfileDrawerTitle = (TextView) findViewById(R.id.customerProfileDrawerTitle);
+        drawerList = (RecyclerView) findViewById(R.id.drawerList);
 
-        Menu menu = navigationView.getMenu();
+       /* Menu menu = navigationView.getMenu();
         MenuItem profileImg = menu.findItem(R.id.updateProfile);
         MenuItem infoTripImg = menu.findItem(R.id.infoTrip);
-        MenuItem helpImg = menu.findItem(R.id.help);/*
+        MenuItem helpImg = menu.findItem(R.id.help);*//*
         ImageView infoImg = (ImageView) hView1.findViewById(R.id.infoTrip);
-        ImageView helpImg = (ImageView) hView2.findViewById(R.id.help);*/
+        ImageView helpImg = (ImageView) hView2.findViewById(R.id.help);*//*
         final Drawable profileIcon = new IconicsDrawable(this)
                 .icon(CommunityMaterial.Icon.cmd_account)
                 .color(ResourcesCompat.getColor(getResources(),R.color.iconColor,null))
@@ -192,18 +205,17 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
                 .icon(CommunityMaterial.Icon.cmd_comment_question_outline)
                 .color(ResourcesCompat.getColor(getResources(),R.color._1,null))
                 .sizeDp(12);
-        helpImg.setIcon(questionIcon);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        choseTripBackPress = (ImageButton) findViewById(R.id.choseTripBackPress);
+        helpImg.setIcon(questionIcon);*/
 
-        addDrawerItems();
+        //addDrawerItems();
         setupDrawer();
-        iLandingPresenter = new LandingPresenter(this,TAG,this);
+        iLandingPresenter = new LandingPresenter(this, TAG, this);
         //------------ End of Navigation Drawer-----------------------------
         mapFragmentView = new MapFragmentView();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.landingContainer, mapFragmentView);
         bundle.putParcelable("UserDetails", userDetails);
+
         mapFragmentView.setArguments(bundle);
         fragmentTransaction.commit();
         int width = (getResources().getDisplayMetrics().widthPixels);
@@ -212,17 +224,27 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         navigationView.setLayoutParams(params);
 
         upProfilePresenter = new UpProfilePresenter();
-        View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.customerProfileDrawerTitle);
-        if(userDetails!=null) {
+        /*View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.customerProfileDrawerTitle);*/
+        if (userDetails != null) {
             System.out.println("LandingPage -- UserDetails Share- name : " + userDetails.getFName());
             System.out.println("LandingPage -- UserDetails Share- Id : " + userDetails.getUserID());
             System.out.println("LandingPage -- UserDetails Share- fcm : " + userDetails.getFcm());
-            nav_user.setText(userDetails.getFName());
+            //nav_user.setText(userDetails.getFName());
         }
-        //drawerListAdapter = new DrawerListAdapter(getData(),this);
+        drawerListAdapter = new DrawerListAdapter(getData(), this);
+        drawerList.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        drawerList.setLayoutManager(mLayoutManager);
+        drawerList.setItemAnimator(new DefaultItemAnimator());
+        drawerList.setAdapter(drawerListAdapter);
+        drawerListAdapter.setClickListener(this);
 
 
+    }
+
+    public void passVal(IMapFragmentView iMapFragmentView) {
+        this.iMapFragmentView = iMapFragmentView;
 
     }
 
@@ -231,11 +253,16 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
         super.onNewIntent(intent);
         System.out.println("onNewIntent Landing -------------");
         onTripStartUp = (OnTripStartUp) intent.getParcelableExtra("OnTripStartUp");
-        fcmPush =  intent.getStringExtra("fcmPush");
-        System.out.println("onNewIntent Landing fcmPush-------------  "+fcmPush);
+        fcmPush = intent.getStringExtra("fcmPush");
+        System.out.println("onNewIntent Landing fcmPush-------------  " + fcmPush);
         bundle.putParcelable("OnTripStartUp", onTripStartUp);
-        bundle.putString("fcmPush",fcmPush);
-        if(onTripStartUp!=null){
+        bundle.putString("fcmPush", fcmPush);
+        if (onTripStartUp != null) {
+            if (onTripStartUp.getTripStatus().equals("Started")) {
+                iMapFragmentView.pushTripStarted(onTripStartUp);
+            } else if (onTripStartUp.getTripStatus().equals("Stoped")) {
+
+            }
             System.out.println("onNewIntent Landing ------------- inside  ");
             Toast.makeText(getApplicationContext(), "Home Selected", Toast.LENGTH_SHORT).show();
             mapFragmentView = new MapFragmentView();
@@ -249,8 +276,6 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     }
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -260,10 +285,10 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
                 if (mDrawerToggle.isDrawerIndicatorEnabled()) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
 
-                    customerProfileDrawerImg = (CircleImageView) navigationView.findViewById(R.id.customerProfileDrawerImg);
-                    customerProfileDrawerTitle = (TextView) navigationView.findViewById(R.id.customerProfileDrawerTitle);
+                 /*   customerProfileDrawerTitle.setText(userDetails.getFName());
 
-                    try{
+
+                    try {
                         Picasso.with(this)
                                 .load(userDetails.getImgPath())
                                 .networkPolicy(NetworkPolicy.OFFLINE)
@@ -289,18 +314,19 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
                                                     @Override
                                                     public void onError() {
-                                                        Log.v("Picasso","Could not fetch image");
+                                                        Log.v("Picasso", "Could not fetch image");
                                                     }
                                                 });
                                     }
                                 });
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
 
                 } else {
                     onBackPressed();
+                }*/
                 }
                 return true;
 
@@ -333,28 +359,50 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     List<DrawerItems> drawerItems = Arrays.asList();
 
-    public List<DrawerItems> getData(){
+    public List<DrawerItems> getData() {
 
         drawerItems = new ArrayList<DrawerItems>();
+        drawerItems.clear();
 
-        DrawerItems homeItem =  new DrawerItems();
-        homeItem.setName(getResources().getString(R.string.drawer_update_profile));
-        homeItem.setIconDraw(MaterialDrawableBuilder.IconValue.ACCOUNT);
-        homeItem.setID(1);
+        HeaderItem headerItem = new HeaderItem();
+        headerItem.setImageUrl(userDetails.getImgPath());
+        headerItem.setUserName(userDetails.getFName());
+        headerItem.setEnabled(true);
 
+        DrawerItems yourTripItem = new DrawerItems();
+        yourTripItem.setName(getResources().getString(R.string.drawer_your_trips));
+        yourTripItem.setIconDraw(MaterialDrawableBuilder.IconValue.INFORMATION);
+        yourTripItem.setID(1);
+        yourTripItem.setEnabled(true);
+        drawerItems.add(yourTripItem);
 
-        DrawerItems catItem = new DrawerItems();
-        catItem.setName(getResources().getString(R.string.drawer_your_trips));
-        catItem.setIconDraw(MaterialDrawableBuilder.IconValue.INFORMATION);
-        catItem.setID(2);
+        DrawerItems paymentItem = new DrawerItems();
+        paymentItem.setName(getResources().getString(R.string.drawer_update_profile));
+        paymentItem.setIconDraw(MaterialDrawableBuilder.IconValue.CASH);
+        paymentItem.setID(2);
+        paymentItem.setEnabled(true);
+        drawerItems.add(paymentItem);
 
-
-        DrawerItems savesItem = new DrawerItems();
+        DrawerItems hlpItem = new DrawerItems();
         //savesItem.setName(getResources().getString(R.string.Favoris)+" /*("+bookmaeks_count+")*/");
-        savesItem.setName(getResources().getString(R.string.drawer_help));
-        savesItem.setIconDraw(MaterialDrawableBuilder.IconValue.HELP);
-        savesItem.setID(3);
+        hlpItem.setName(getResources().getString(R.string.drawer_help));
+        hlpItem.setIconDraw(MaterialDrawableBuilder.IconValue.HELP);
+        hlpItem.setID(3);
+        drawerItems.add(hlpItem);
 
+        DrawerItems termAndCondItem = new DrawerItems();
+        //savesItem.setName(getResources().getString(R.string.Favoris)+" /*("+bookmaeks_count+")*/");
+        termAndCondItem.setName(getResources().getString(R.string.drawer_help));
+        termAndCondItem.setIconDraw(MaterialDrawableBuilder.IconValue.FILE_DOCUMENT);
+        termAndCondItem.setID(4);
+        drawerItems.add(termAndCondItem);
+
+        DrawerItems settingItem = new DrawerItems();
+        //savesItem.setName(getResources().getString(R.string.Favoris)+" /*("+bookmaeks_count+")*/");
+        settingItem.setName(getResources().getString(R.string.drawer_help));
+        settingItem.setIconDraw(MaterialDrawableBuilder.IconValue.SETTINGS);
+        settingItem.setID(4);
+        drawerItems.add(settingItem);
 
         return drawerItems;
     }
@@ -418,8 +466,8 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     private void getUserSDetails() {
         Gson gson = new Gson();
-        String json = sharedPrefs.getString("UserDetails",null);
-        if(json!=null){
+        String json = sharedPrefs.getString("UserDetails", null);
+        if (json != null) {
             System.out.println("-----------LandingPage uploadProfileName UserDetails" + json);
             userDetails = gson.fromJson(json, UserDetails.class);
             //emailAddress = userDetails.getEmail();
@@ -513,11 +561,10 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     public void onBackPressed() {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            System.out.println("back stack entry count : "+getSupportFragmentManager().getBackStackEntryCount());
-            navigationView.getMenu().getItem(0);
+            System.out.println("back stack entry count : " + getSupportFragmentManager().getBackStackEntryCount());
             setDrawerState(true);
         }
-        if(selectedFragment == null || !selectedFragment.onBackPressed()) {
+        if (selectedFragment == null || !selectedFragment.onBackPressed()) {
             // Selected fragment did not consume the back press event.
             super.onBackPressed();
         }
@@ -625,9 +672,9 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void hideVisibilityLandingItems(int visibility, String value) {
-        if(value.equals("toolbar")){
+        if (value.equals("toolbar")) {
             toolbar.setVisibility(visibility);
-        }else if(value.equals("backImg")){
+        } else if (value.equals("backImg")) {
             choseTripBackPress.setVisibility(visibility);
         }
     }
@@ -636,4 +683,60 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
     public void setSelectedFragment(BackHandledFragment backHandledFragment) {
         this.selectedFragment = selectedFragment;
     }
+
+    @Override
+    public void itemClicked(View view, int position) {
+        DrawerItems drawerItems = drawerListAdapter.getData().get(position);
+        if (drawerItems instanceof DrawerItems) {
+            switch (drawerItems.getID()) {
+                case Menu.YOUR_TRIPS:
+
+                    if (mDrawerLayout != null)
+                        mDrawerLayout.closeDrawers();
+
+
+                    break;
+                case Menu.PAYMENTS:
+
+                    if (mDrawerLayout != null)
+                        mDrawerLayout.closeDrawers();
+
+
+                    break;
+                case Menu.HELP:
+
+                    if (mDrawerLayout != null)
+                        mDrawerLayout.closeDrawers();
+
+
+                    break;
+                case Menu.TERMS_AND_CONDITIONS:
+
+                    if (mDrawerLayout != null)
+                        mDrawerLayout.closeDrawers();
+
+
+                    break;
+                case Menu.SETTINGS:
+
+                    if (mDrawerLayout != null)
+                        mDrawerLayout.closeDrawers();
+
+
+                    break;
+
+
+            }
+        }
+
+    }
+
+    private static class Menu {
+        public static final int YOUR_TRIPS = 1;
+        public static final int PAYMENTS = 2;
+        public static final int HELP = 3;
+        public static final int TERMS_AND_CONDITIONS = 4;
+        public static final int SETTINGS = 5;
+    }
+
 }

@@ -20,9 +20,18 @@ public class DrawerItems implements Parcelable {
     private String ImageUrl;
     private int ImageId;
     protected String type;
+    private boolean enabled=true;
     private MaterialDrawableBuilder.IconValue iconDraw;
 
     public DrawerItems() {
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public int getID() {
@@ -95,9 +104,9 @@ public class DrawerItems implements Parcelable {
         dest.writeString(this.ImageUrl);
         dest.writeInt(this.ImageId);
         dest.writeString(this.type);
+        dest.writeByte(this.enabled ? (byte) 1 : (byte) 0);
         dest.writeInt(this.iconDraw == null ? -1 : this.iconDraw.ordinal());
     }
-
 
     protected DrawerItems(Parcel in) {
         this.ID = in.readInt();
@@ -106,11 +115,12 @@ public class DrawerItems implements Parcelable {
         this.ImageUrl = in.readString();
         this.ImageId = in.readInt();
         this.type = in.readString();
+        this.enabled = in.readByte() != 0;
         int tmpIconDraw = in.readInt();
         this.iconDraw = tmpIconDraw == -1 ? null : MaterialDrawableBuilder.IconValue.values()[tmpIconDraw];
     }
 
-    public static final Parcelable.Creator<DrawerItems> CREATOR = new Parcelable.Creator<DrawerItems>() {
+    public static final Creator<DrawerItems> CREATOR = new Creator<DrawerItems>() {
         @Override
         public DrawerItems createFromParcel(Parcel source) {
             return new DrawerItems(source);

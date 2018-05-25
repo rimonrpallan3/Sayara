@@ -19,7 +19,7 @@
             android:layout_width="@dimen/_200"
             android:layout_height="@dimen/_200"
             android:layout_gravity="center"
-            android:src="@drawable/new_user_logo"
+            android:src="@drawable/user_logo"
             android:layout_marginBottom="@dimen/_20"
             android:textAllCaps="false" />
 

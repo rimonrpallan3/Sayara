@@ -44,11 +44,19 @@
             android:layout_gravity="start"
             android:background="@color/nav_drawer_list_bag_color"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/drawer_header"
             app:itemBackground="@android:color/transparent"
             app:itemIconTint="@color/black"
-            app:itemTextColor="@color/black"
-            app:menu="@menu/nav_drawer_item_list">
+            app:itemTextColor="@color/black">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--<include layout="@layout/drawer_header" />-->
+
+                <include layout="@layout/navigation_drawer_menu" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/main_activity_version_name"

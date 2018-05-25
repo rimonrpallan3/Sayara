@@ -2,6 +2,7 @@ package com.voyager.sayara.landingpage.view;
 
 import com.voyager.sayara.MapPlaceSearch.model.CurrentPlaceDetails;
 import com.voyager.sayara.landingpage.model.Cars;
+import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.geogetpath.Route;
 
 import java.util.HashMap;
@@ -20,4 +21,5 @@ public interface IMapFragmentView {
     void tripCanceled();
     void tripOnGoingEnded();
     void highLikeHoodCurrentPlace(CurrentPlaceDetails maxCurrentPlaceDetails);
+    void pushTripStarted(OnTripStartUp onTripStartUp);
 }
