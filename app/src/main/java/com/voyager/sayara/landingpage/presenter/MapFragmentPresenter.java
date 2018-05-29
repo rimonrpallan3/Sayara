@@ -29,6 +29,7 @@ import com.voyager.sayara.landingpage.model.geogetpath.Distance;
 import com.voyager.sayara.landingpage.model.geogetpath.GetPaths;
 import com.voyager.sayara.landingpage.model.geogetpath.Leg;
 import com.voyager.sayara.landingpage.model.geogetpath.Route;
+import com.voyager.sayara.landingpage.model.geogetpath.StartLocation_;
 import com.voyager.sayara.landingpage.model.geogetpath.Step;
 import com.voyager.sayara.landingpage.model.landingModel.EndTrip;
 import com.voyager.sayara.landingpage.view.IMapFragmentView;
@@ -117,6 +118,11 @@ public class MapFragmentPresenter implements IMapFragmentPresenter {
         originLatD = Double.parseDouble(originLat);
         originLngD = Double.parseDouble(originLng);
         orginLatLng = new LatLng(originLatD, originLngD);
+        final double[] polyStartLat = {0};
+        final double[] polyStartLng = {0};
+        final double[] polyEndLat = {0};
+        final double[] polyEndLng = {0};
+
         Retrofit retrofit = new ApiClient().getRetrofitClientPath();
         WebServices webServices = retrofit.create(WebServices.class);
         Call<GetPaths> call = webServices.getPaths(originLat + "," + originLng, destinationLat + "," + destinationLng, sensor, ApiKey);
@@ -149,6 +155,7 @@ public class MapFragmentPresenter implements IMapFragmentPresenter {
                     }
                     route.add(path);
                 }
+
                 iMapFragmentView.setRoutesTrip(route, routes, tripDist);
             }
 

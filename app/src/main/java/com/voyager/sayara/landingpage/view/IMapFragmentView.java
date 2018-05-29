@@ -21,5 +21,4 @@ public interface IMapFragmentView {
     void tripCanceled();
     void tripOnGoingEnded();
     void highLikeHoodCurrentPlace(CurrentPlaceDetails maxCurrentPlaceDetails);
-    void pushTripStarted(OnTripStartUp onTripStartUp);
 }

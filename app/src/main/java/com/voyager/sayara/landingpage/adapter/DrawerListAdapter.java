@@ -35,6 +35,9 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context context;
     private ClickListener clickListener;
     private LayoutInflater infalter;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_FOOTER = 1;
+
 
 
 
@@ -42,15 +45,19 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.drawerItemsList = drawerItemsList;
         this.infalter = LayoutInflater.from(context);
         this.context = context;
+
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        System.out.println(" ------------ DrawerListAdapter onCreateViewHolder viewType : "+viewType);
         if(viewType == 1){
             View rootView = infalter.inflate(R.layout.drawer_list_menu_card,parent,false);
+            System.out.println(" ------------ DrawerListAdapter drawer_list_menu_card");
             return new DrawerListViewHolder(rootView);
         }else{
             View rootView = infalter.inflate(R.layout.drawer_header,parent,false);
+            System.out.println(" ------------ DrawerListAdapter drawer_header");
             return new mHeaderViewHolder(rootView);
         }
     }
@@ -60,7 +67,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(final RecyclerView.ViewHolder holderViews, final int position) {
         if(holderViews instanceof DrawerListViewHolder) {
             DrawerListViewHolder holder = (DrawerListViewHolder) holderViews;
-
+            System.out.println(" ------------ DrawerListAdapter onBindViewHolder drawer_list_menu_card position : "+position);
             if (drawerItemsList.get(position).getIconDraw() != null) {
                 Drawable yourDrawable = MaterialDrawableBuilder.with(context) // provide a context
                         .setIcon(drawerItemsList.get(position).getIconDraw()) // provide an icon
@@ -71,7 +78,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             holder.tvDrawerItem.setText(drawerItemsList.get(position).getName());
         } else if (holderViews instanceof mHeaderViewHolder){
-
+            System.out.println(" ------------ DrawerListAdapter onBindViewHolder drawer_header position : "+position);
             final mHeaderViewHolder holder = (mHeaderViewHolder) holderViews;
             final HeaderItem dataItem = (HeaderItem) drawerItemsList.get(position);
             System.out.println("DrawerListViewHolder user name : "+dataItem.getUserName());
@@ -116,6 +123,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
+
     @Override
     public int getItemCount() {
         if (drawerItemsList != null && drawerItemsList.size() > 0) {
@@ -127,10 +135,12 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
+        System.out.println(" ------------ DrawerListAdapter getItemViewType position : "+position);
         if(position == 0 && drawerItemsList.get(position) instanceof HeaderItem){
-            return 0;
+            System.out.println(" ------------ DrawerListAdapter onBindViewHolder getItemViewType position : "+position);
+            return TYPE_HEADER;
         }
-        return 1;
+        return TYPE_FOOTER;
     }
 
 
@@ -143,35 +153,42 @@ public class DrawerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * ViewHolder class which holds Initialisation to all views and buttons.
      */
 
-    public class DrawerListViewHolder extends RecyclerView.ViewHolder {
+    public class DrawerListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvDrawerItem;
         ImageView ivDrawerItem;
+        View root;
 
         public DrawerListViewHolder(View itemView) {
             super(itemView);
+            root = itemView;
+            itemView.setOnClickListener(this);
             ivDrawerItem = (ImageView) itemView.findViewById(R.id.ivDrawerItem);
             tvDrawerItem = (TextView) itemView.findViewById(R.id.tvDrawerItem);
-        }
-    }
-
-    public  class mHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-
-        TextView userName;
-        CircleImageView userCircleImg;
-        public View root;
-
-        public mHeaderViewHolder(View itemView) {
-            super(itemView);
-            root = itemView;
-            userCircleImg = (CircleImageView) itemView.findViewById(R.id.customerProfileDrawerImg);
-            userName = (TextView) itemView.findViewById(R.id.customerProfileDrawerTitle);
-
         }
 
         @Override
         public void onClick(View v) {
+
+            if(clickListener!=null){
+                clickListener.itemClicked(v,getPosition());
+            }
+
+            //delete(getPosition());
+
+        }
+    }
+
+    public  class mHeaderViewHolder extends RecyclerView.ViewHolder{
+
+
+        TextView userName;
+        CircleImageView userCircleImg;
+
+        public mHeaderViewHolder(View itemView) {
+            super(itemView);
+            userCircleImg = (CircleImageView) itemView.findViewById(R.id.customerProfileDrawerImg);
+            userName = (TextView) itemView.findViewById(R.id.customerProfileDrawerTitle);
 
         }
     }

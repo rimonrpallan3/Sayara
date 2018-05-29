@@ -4,7 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +17,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,6 +34,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -52,10 +56,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -130,7 +136,6 @@ public class MapFragmentView extends BackHandledFragment implements
     String mprovider;
     View rootView;
     FloatingActionButton fabLoc;
-    private static final String TAG = MapFragmentView.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private FusedLocationProviderClient mFusedLocationClient;
     double lat = 26.2285;
@@ -146,6 +151,7 @@ public class MapFragmentView extends BackHandledFragment implements
     ImageView carImg;
     TextView tCashAmt;
     TextView truckTypeTxt;
+    public final static String TAG =  MapFragmentView.class.getSimpleName();
 
     String sourceLocationTxt = "";
     String sourcePlaceId = "";
@@ -229,6 +235,11 @@ public class MapFragmentView extends BackHandledFragment implements
 
     SharedPreferences sharedPrefs;
     SharedPreferences.Editor editor;
+    boolean isMarkerRotating = false;
+    Marker mSourceMarker = null;
+    Marker mDestinationMarker = null;
+    LatLng sourceLatLng;
+    LatLng destLatLng;
 
     public MapFragmentView() {
 
@@ -389,22 +400,12 @@ public class MapFragmentView extends BackHandledFragment implements
         carImg.setOnClickListener(this);
         cashAmt.setOnClickListener(this);
         MapsInitializer.initialize(this.getActivity());
-
         iMapFragmentPresenter = new MapFragmentPresenter(this, getActivity(), TAG);
-        //iMapFragmentPresenter.getCurrentLocDetails();
-        Gson gson = new Gson();
-        String json2 = gson.toJson(maxCurrentPlaceDetails);
-        System.out.println("-----------MapFragmentView PlaceLikelihoodBufferResponse CurrentPlaceDetails : " + json2);
 
-        /*Intent resultIntent = new Intent(getContext(), PulsatingActivity.class);
-        resultIntent.putExtra("waitingForDriver", "true");
-        startActivity(resultIntent);*/
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenHeight = displayMetrics.heightPixels;
         screenWidth = displayMetrics.widthPixels;
-        System.out.println("-----------MapFragmentView OnCreate height : " + screenHeight);
-        System.out.println("-----------MapFragmentView OnCreate width : " + screenWidth);
         return rootView;
     }
 
@@ -469,22 +470,11 @@ public class MapFragmentView extends BackHandledFragment implements
         }
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-       /* mMap.getUiSettings().setZoomControlsEnabled(true);
-        LocationSettingsRequest.Builder builder2 = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                        getActivity(), R.raw.map_json));
-        System.out.println("MapFragmentView push when null : "+location);
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat, log)).title("Marker"));
-        CameraUpdate center2 = CameraUpdateFactory.newLatLng(new LatLng(lat, log));
-        CameraUpdate zoom2 = CameraUpdateFactory.zoomTo(13);
-        mMap.moveCamera(center2);
-        mMap.animateCamera(zoom2);*/
-
         if (fcmPush != null && onTripStartUp.getTripStatus() != null && fcmPush.length() > 1 && onTripStartUp.getTripStatus().equals("Started")) {
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                     .addLocationRequest(mLocationRequest);
@@ -548,79 +538,11 @@ public class MapFragmentView extends BackHandledFragment implements
             });
         }
         System.out.println("MapFragmentView map Location : " + location);
-
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            } else {
-                mMap.setMyLocationEnabled(true);
-            }
-        } else {
-            mMap.setMyLocationEnabled(true);
-        }*/
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    /**
-     * Shows a {@link Snackbar}.
-     *
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(rootView.findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
-    }
-
-
-    private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-
-            showSnackbar(R.string.permission_rationale, android.R.string.ok,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    });
-
-        } else {
-            Log.i(TAG, "Requesting permission");
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
-            // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
-    /**
-     * Return the current state of the permissions needed.
-     */
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -788,6 +710,59 @@ public class MapFragmentView extends BackHandledFragment implements
         tripStartOrgin.setText(tripInfo.getPickupAddress());
         tripEndDestin.setText(tripInfo.getDropAddress());
         tripAmount.setText(tripInfo.getTripAmount());
+    }
+
+    private double bearingBetweenLocations(LatLng latLng1,LatLng latLng2) {
+
+        double PI = 3.14159;
+        double lat1 = latLng1.latitude * PI / 180;
+        double long1 = latLng1.longitude * PI / 180;
+        double lat2 = latLng2.latitude * PI / 180;
+        double long2 = latLng2.longitude * PI / 180;
+
+        double dLon = (long2 - long1);
+
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+                * Math.cos(lat2) * Math.cos(dLon);
+
+        double brng = Math.atan2(y, x);
+
+        brng = Math.toDegrees(brng);
+        brng = (brng + 360) % 360;
+
+        return brng;
+    }
+
+    private void rotateMarker(final Marker marker, final float toRotation) {
+        if(!isMarkerRotating) {
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+            final float startRotation = marker.getRotation();
+            final long duration = 1000;
+
+            final Interpolator interpolator = new LinearInterpolator();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    isMarkerRotating = true;
+
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = interpolator.getInterpolation((float) elapsed / duration);
+
+                    float rot = t * toRotation + (1 - t) * startRotation;
+
+                    marker.setRotation(-rot > 180 ? rot / 2 : rot);
+                    if (t < 1.0) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16);
+                    } else {
+                        isMarkerRotating = false;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -982,27 +957,6 @@ public class MapFragmentView extends BackHandledFragment implements
                 alertDialog.cancel();
             }
         });
-
-        // set dialog message
-       /* alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-
-                            }
-                        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });*/
-
-
-
-        // show it
         alertDialog.show();
     }
 
@@ -1013,7 +967,6 @@ public class MapFragmentView extends BackHandledFragment implements
         choseTrip.setVisibility(View.GONE);
         serviceUnavailable.setVisibility(View.GONE);
         setLocMethod();
-
     }
 
     public void setLocMethod() {
@@ -1027,25 +980,31 @@ public class MapFragmentView extends BackHandledFragment implements
 
     @Override
     public void setRoutesTrip(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist) {
-        distance = tripDist;
-        System.out.println("MapFragmentView onActivityResult sourceLocationTxt : " + sourceLocationTxt +
-                " destLat : " + destLat +
-                " destLong : " + destLong +
-                " sourceLat : " + sourceLat +
-                " sourceLong : " + sourceLong +
-                " originLng : " + originLng);
+        BitmapDescriptor iconStart = BitmapDescriptorFactory.fromResource(R.drawable.location_pointer_icons_orange);
+        BitmapDescriptor iconEnd = BitmapDescriptorFactory.fromResource(R.drawable.location_pointer_icons_orange_square);
+        double presentTripLat = 0;
+        double presentTripLng = 0;
+        double endTripLat = 0;
+        double endTripLng = 0;
+        double mMarkerRotations = 0;
+
         if (destLat > 0.0 && destLong > 0.0 && sourceLat > 0.0 && sourceLong > 0.0) {
+             sourceLatLng = new LatLng(sourceLat,sourceLong);
+             destLatLng = new LatLng(destLat,destLong);
             System.out.println("MapFragmentView---IF");
             if (mMap != null) {
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions()
+                mSourceMarker = null;
+                mSourceMarker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(sourceLat, sourceLong))
-                        .title("From"))
-                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(sourceLocationTxt)));
+                        .title("From"));
+                mSourceMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(sourceLocationTxt)));
+                LatLng sourseLatLng = new LatLng(sourceLat, sourceLong);
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(destLat, destLong))
                         .title("To"))
                         .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(destinationLocationTxt)));
+                LatLng destLatLng = new LatLng(destLat, destLong);
                 ArrayList<LatLng> points = null;
                 PolylineOptions polyLineOptions = null;
                 // traversing through routes
@@ -1058,12 +1017,15 @@ public class MapFragmentView extends BackHandledFragment implements
                     List<HashMap<String, String>> path = route.get(i);
                     for (int j = 0; j < path.size(); j++) {
                         HashMap<String, String> point = path.get(j);
+                        HashMap<String, String> point2 = path.get(j);
                         double lat = Double.parseDouble(point.get("lat"));
                         double lng = Double.parseDouble(point.get("lng"));
                         if (destLoc.getLatitude() > 0) {
                             destLoc.setLatitude(srcLoc.getLatitude());
                             destLoc.setLongitude(srcLoc.getLongitude());
                         } else {
+                            presentTripLat =lat;
+                            presentTripLng= lng;
                             destLoc.setLatitude(lat);
                             destLoc.setLongitude(lng);
                         }
@@ -1072,6 +1034,13 @@ public class MapFragmentView extends BackHandledFragment implements
                         dist = dist + destLoc.distanceTo(srcLoc);
                         LatLng position = new LatLng(lat, lng);
                         points.add(position);
+                        if(j==path.size()-1){
+                            endTripLat = Double.parseDouble(point.get("lat"));
+                            endTripLng = Double.parseDouble(point.get("lng"));
+                        }else if(j==0){
+                            presentTripLat = Double.parseDouble(point.get("lat"));
+                            presentTripLng = Double.parseDouble(point.get("lng"));
+                        }
                     }
                     zoomRoute(mMap, points);
                     polyLineOptions.addAll(points);
@@ -1083,7 +1052,19 @@ public class MapFragmentView extends BackHandledFragment implements
                     }
                     polyLineOptions.width(lineWidth);
                     polyLineOptions.color(Color.DKGRAY);
+                    //points.get()
+                    //presentTripLat =polyLineOptions.getPoints().get(path.size()-1).latitude;
+                    //presentTripLng =polyLineOptions.getPoints().get(path.size()-1).longitude;
                 }
+                //mMarkerRotations = bearingBetweenLocations(sourseLatLng,destLatLng);
+                //rotateMarker(mSourceMarker,Float.valueOf(String.valueOf(mMarkerRotations)));
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(presentTripLat,presentTripLng)))
+                        .setIcon(iconStart);
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng( endTripLat,endTripLng)))
+                        .setIcon(iconEnd);
+
                 frameLoaderLayout.setVisibility(View.GONE);
 
 
@@ -1107,28 +1088,15 @@ public class MapFragmentView extends BackHandledFragment implements
         }
     }
 
+
     @Override
-    public void setRoutesDriverToPickUp(List<List<HashMap<String, String>>> route,
-                                        List<Route> routes,
-                                        String driverLat,
-                                        String driverLng,
-                                        String pickUpLat,
-                                        String pickUpLng,
-                                        String pickUpLocName) {
-        System.out.println("MapFragmentView setRoutesDriverToPickUp pickUpLocName : " + pickUpLocName +
-                " destLat : " + driverLat +
-                " destLong : " + driverLng +
-                " sourceLat : " + pickUpLat +
-                " sourceLong : " + pickUpLng +
-                " originLng : " + originLng);
+    public void setRoutesDriverToPickUp(List<List<HashMap<String, String>>> route, List<Route> routes, String driverLat, String driverLng, String pickUpLat, String pickUpLng, String pickUpLocName) {
         double driverLatD = Double.parseDouble(driverLat);
         double driverLngD = Double.parseDouble(driverLng);
         double pickUpLatD = Double.parseDouble(pickUpLat);
         double pickUpLngD = Double.parseDouble(pickUpLng);
 
-
         if (driverLatD > 0.0 && driverLngD > 0.0 && pickUpLatD > 0.0 && pickUpLngD > 0.0) {
-            System.out.println("MapFragmentView---IF");
             if (mMap != null) {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions()
@@ -1206,12 +1174,9 @@ public class MapFragmentView extends BackHandledFragment implements
         } else {
             choseTrip.setVisibility(View.VISIBLE);
         }
-        System.out.println("getDriverCarDetails ---carType");
         for (int i = 0; i < cares.size(); i++) {
             String carType = cares.get(i).getName();
             int carId = cares.get(i).getId();
-            System.out.println("carType" + carType);
-            System.out.println("driveCarId" + carId);
         }
 
     }
@@ -1258,16 +1223,6 @@ public class MapFragmentView extends BackHandledFragment implements
         intent.putExtra("CurrentPlaceDetails", maxCurrentPlaceDetails);
         intent.putExtras(bundle);
         startActivityForResult(intent, Helper.SEARCH_MAP_API_TRIP);
-        Gson gson = new Gson();
-        String json2 = gson.toJson(maxCurrentPlaceDetails);
-        System.out.println("-----------MapFragmentView PlaceLikelihoodBufferResponse highLikeHoodCurrentPlace CurrentPlaceDetails : " + json2);
         tvMapSourceDestination.setEnabled(true);
-    }
-
-    @Override
-    public void pushTripStarted(OnTripStartUp onTripStartUp) {
-        Gson gson = new Gson();
-        String json2 = gson.toJson(onTripStartUp);
-        System.out.println("-----------MapFragmentView pushTripStarted  onTripStartUp: " + json2);
     }
 }

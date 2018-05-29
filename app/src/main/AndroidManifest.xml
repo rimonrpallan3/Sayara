@@ -51,6 +51,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity android:name="com.voyager.sayara.settings.Settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name="com.voyager.sayara.loginsignuppage.LoginSignUpPage"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
