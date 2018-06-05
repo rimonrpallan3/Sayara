@@ -48,6 +48,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.voyager.sayara.R;
+import com.voyager.sayara.TermsAndConduction.TermsAndConduction;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.drawerfragments.help.HelpFragment;
@@ -56,10 +57,13 @@ import com.voyager.sayara.landingpage.helper.BackHandledFragment;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
 import com.voyager.sayara.landingpage.model.drawerHeader.HeaderItem;
 import com.voyager.sayara.landingpage.model.drawerList.DrawerItems;
+import com.voyager.sayara.landingpage.model.landingModel.Landing;
 import com.voyager.sayara.landingpage.presenter.ILandingPresenter;
 import com.voyager.sayara.landingpage.presenter.LandingPresenter;
 import com.voyager.sayara.landingpage.view.ILandingView;
 import com.voyager.sayara.landingpage.view.IMapFragmentView;
+import com.voyager.sayara.loginsignuppage.LoginSignUpPage;
+import com.voyager.sayara.payment.PaymentActivity;
 import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.settings.Settings;
 import com.voyager.sayara.triphistroty.TripHistory;
@@ -665,6 +669,15 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
                     System.out.println("LandingPage onActivityResult GET_DRIVER : ");
                 }
                 break;
+            case Helper.LOG_OUT:
+                if (resultCode == Activity.RESULT_OK) {
+                    System.out.println("LandingPage onActivityResult GET_DRIVER : ");
+                    Intent intent = new Intent(LandingPage.this, LoginSignUpPage.class);
+                    intent.putExtra("logout","logout");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
 
             default:
                 break;
@@ -707,12 +720,19 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
                     if (mDrawerLayout != null)
                         mDrawerLayout.closeDrawers();
+                    intent = new Intent(LandingPage.this, PaymentActivity.class);
+                    intent.putExtra("UserDetails", userDetails);
+                    startActivity(intent);
 
                     break;
                 case Menu.HELP:
 
                     if (mDrawerLayout != null)
-                        mDrawerLayout.closeDrawers();/*
+                        mDrawerLayout.closeDrawers();
+                    intent = new Intent(LandingPage.this, PaymentActivity.class);
+                    intent.putExtra("UserDetails", userDetails);
+                    startActivity(intent);
+                    /*
                     getSupportActionBar().setTitle(getResources().getString(R.string.help));
                     HelpFragment helpFragment = new HelpFragment();
                     fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -725,7 +745,9 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
 
                     if (mDrawerLayout != null)
                         mDrawerLayout.closeDrawers();
-
+                    intent = new Intent(LandingPage.this, TermsAndConduction.class);
+                    intent.putExtra("UserDetails", userDetails);
+                    startActivity(intent);
 
                     break;
                 case Menu.SETTINGS:
@@ -734,7 +756,7 @@ public class LandingPage extends AppCompatActivity implements View.OnClickListen
                         mDrawerLayout.closeDrawers();
                     Intent intent2 = new Intent(LandingPage.this, Settings.class);
                     intent2.putExtra("UserDetails", userDetails);
-                    startActivity(intent2);
+                    startActivityForResult(intent2,Helper.LOG_OUT);
 
                     break;
 

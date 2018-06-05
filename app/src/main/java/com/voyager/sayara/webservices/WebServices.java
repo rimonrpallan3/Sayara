@@ -97,6 +97,12 @@ public interface WebServices {
     @POST("getCars/")
     Call<TripCarDetails> getTripDetails(@Nullable @Field("pickup_loc") String latLng,
                                         @Nullable @Field("user_id") int userId);
+
+    @FormUrlEncoded
+    @POST("logout/")
+    Call<UserDetails> logOut(@Nullable @Field("user_id") int userId,
+                                        @Nullable @Field("logout") int value);
+
     @POST("FCMUpdateServlet")
     public Call<UserDetails> updateFCMId(@Nullable @Field("user_id") int userId,
                                          @Nullable @Field("token") String token);

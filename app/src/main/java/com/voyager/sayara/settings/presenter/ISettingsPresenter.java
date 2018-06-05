@@ -5,4 +5,5 @@ package com.voyager.sayara.settings.presenter;
  */
 
 public interface ISettingsPresenter {
+    void logout(int userId,int logOut);
 }

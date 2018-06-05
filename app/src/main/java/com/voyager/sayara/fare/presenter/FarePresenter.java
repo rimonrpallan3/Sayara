@@ -51,8 +51,12 @@ public class FarePresenter implements IFarePresenter{
                         " tripId : " + tripResponse.getTripId() +
                         " userId : " + tripResponse.getUserId() +
                         " createdAt : " + tripResponse.getCreatedAt() );
-
-                iFareView.waitToGetDriver();
+                if(tripResponse.getError()){
+                    System.out.println(" Error : "+tripResponse.getError_msg());
+                    iFareView.toastMesg(tripResponse.getError_msg());
+                }else {
+                    iFareView.waitToGetDriver();
+                }
             }
 
             @Override

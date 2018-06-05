@@ -53,6 +53,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     SharedPreferences.Editor editor;
 
     public static final String FaithApp_PREFERENCES = "FaithApp_Prefs";
+    public static final int NOTIFICATION_ONTRIP_ACCEPTED = 1;
+    public static final int NOTIFICATION_ONTRIP_STARTED = 2;
+    NotificationManager manager;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -78,8 +81,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     addTripDetialsGsonInSharedPrefrences(onTripStartUp);
+                    Intent intent2 = new Intent(getApplicationContext(), LandingPage.class);
+                    intent2.putExtra("OnTripStartUp", onTripStartUp);
+                    intent2.putExtra("fcmPush", fcmPush);
+                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent2);
+                    addTripDetialsGsonInSharedPrefrences(onTripStartUp);
                     System.out.println("onTripStartUp onMessageReceived -- getTripId"+ tripInfo.getTripId());
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ONTRIP_ACCEPTED,intent2,PendingIntent.FLAG_UPDATE_CURRENT);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                            .setAutoCancel(true)
+                            .setContentTitle("FCM Accepted")
+                            .setContentText("Rimon")
+                            .setSmallIcon(R.drawable.icon4)
+                            .setContentIntent(pendingIntent);
+
+                    manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    manager.notify(0,builder.build());
+
                 }else if(to.equals("Started")){
+                    if(manager!=null)
+                    manager.cancelAll();
                     System.out.println("----------- MyFirebaseMessagingService onMessageReceived Started fcmDetials" + json);
                     fcmPush = "fcm";
                     onTripStartUp = getTripDetails();
@@ -91,8 +114,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.putExtra("fcmPush", fcmPush);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ONTRIP_STARTED,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                            .setAutoCancel(true)
+                            .setContentTitle("FCM Started")
+                            .setContentText("Rimon")
+                            .setSmallIcon(R.drawable.icon4)
+                            .setContentIntent(pendingIntent);
+
+                    manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    manager.notify(0,builder.build());
                     System.out.println("onMessageReceived --onTripStartUp : "+jsonString);
                 }else if(to.equals("Stoped")){
+                    if(manager!=null)
+                    manager.cancelAll();
                     System.out.println("----------- MyFirebaseMessagingService onMessageReceived Stoped fcmDetials" + json);
                     fcmPush = "fcm";
                     onTripStartUp = getTripDetails();
@@ -182,6 +218,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         return onTripStartUp;
 
     }
+
+    /**
+     * This method pulls out the notification icon for the push messages.
+     * which will be further used in construction of push message.
+     *
+     * @return push notification icon.
+     */
+    protected int getNotificationIcon() {
+        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        return useWhiteIcon ? R.drawable.icon4 : R.drawable.icon4;
+    }
+
 
 
     private void showNotification(String message) {
@@ -333,6 +381,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 */
+
+ /*   public void showTripNotification(){
+        try {
+
+*//* Request code *//*
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(getNotificationIcon())
+                    .setLargeIcon(img)
+                    .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
+                    .setContentTitle(messageTitle)
+                    .setSubText(churchTitle)
+                    .setContentText(Html.fromHtml(messageBody))
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image))
+*//*Notification with Image*//*
+
+                    .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 
 
     /*

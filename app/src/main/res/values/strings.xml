@@ -91,6 +91,10 @@
     <string name="btn_ride_now_txt">Ride Now</string>
     <string name="search_loc">Search location</string>
     <string name="fare">Fare</string>
+    <string name="payment">Payment</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="payment_paytm">Paytm</string>
+    <string name="payment_cash">Cash</string>
 
     <!--Custom Dialog Box-->
 

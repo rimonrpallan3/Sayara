@@ -5,4 +5,5 @@ package com.voyager.sayara.settings.view;
  */
 
 public interface ISettingsView {
+    void logedOut();
 }

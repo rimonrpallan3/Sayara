@@ -2,32 +2,27 @@ package com.voyager.sayara.PulsatingActivity;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.voyager.sayara.MapPlaceSearch.view.IMapPlaceSearchView;
 import com.voyager.sayara.PulsatingActivity.presenter.IPulsatingPresenter;
-import com.voyager.sayara.PulsatingActivity.presenter.PulsatingPresenter;
-import com.voyager.sayara.PulsatingActivity.view.IPulsatingView;
 import com.voyager.sayara.R;
 import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.landingpage.model.OnTripStartUp;
-import com.voyager.sayara.registerpage.model.UserDetails;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
+import static com.voyager.sayara.gcm.MyFirebaseMessagingService.NOTIFICATION_ONTRIP_ACCEPTED;
 
 /**
  * Created by User on 16-Mar-18.
@@ -45,6 +40,7 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
     SharedPreferences.Editor editor;
 
     IPulsatingPresenter iPulsatingPresenter;
+    NotificationManager notificationManager;
 
     public PulsatingActivity() {
     }
@@ -69,6 +65,8 @@ public class PulsatingActivity  extends AppCompatActivity implements View.OnClic
 
             );*/
         }
+        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ONTRIP_ACCEPTED);
 
 
         pulseImg = (ImageView) findViewById(R.id.pulseImg);

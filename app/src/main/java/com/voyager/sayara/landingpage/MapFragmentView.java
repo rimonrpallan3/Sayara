@@ -339,17 +339,15 @@ public class MapFragmentView extends BackHandledFragment implements
             System.out.println("MapFragmentView -- UserDetails- userId : " + userDetails.getUserID());
             try {
                 onTripStartUp = bundle.getParcelable("OnTripStartUp");
-                fcmPush = bundle.getString("fcmPush");
-                System.out.println(" ----------- MapFragmentView fcmPush : " + fcmPush);
-                if (fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Stoped")) {
-                    if (layoutOnTripStartUp.getVisibility() == View.VISIBLE) {
-                        layoutDriverWaiting.setVisibility(View.VISIBLE);
-                        layoutTripOngoing.setVisibility(View.GONE);
-                        layoutOnTripStartUp.setVisibility(View.GONE);
-                        iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
-                        iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+                if(onTripStartUp==null){
+                    onTripStartUp = getTripDetails();
+                    if(onTripStartUp!=null){
+                        setTripStatuses();
                     }
+                }else {
+                    setTripStatuses();
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -407,6 +405,31 @@ public class MapFragmentView extends BackHandledFragment implements
         screenHeight = displayMetrics.heightPixels;
         screenWidth = displayMetrics.widthPixels;
         return rootView;
+    }
+
+    public void setTripStatuses(){
+        fcmPush = bundle.getString("fcmPush");
+        System.out.println(" ----------- MapFragmentView fcmPush : " + fcmPush);
+        if (fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Stoped")) {
+            if (layoutOnTripStartUp.getVisibility() == View.VISIBLE) {
+                layoutDriverWaiting.setVisibility(View.VISIBLE);
+                layoutTripOngoing.setVisibility(View.GONE);
+                layoutOnTripStartUp.setVisibility(View.GONE);
+                iLandingView.hideVisibilityLandingItems(View.VISIBLE, "toolbar");
+                iMapFragmentPresenter.hideVisibilityLayoutItems(View.VISIBLE);
+                editor.clear();
+            }
+        }else if(fcmPush != null && fcmPush.length() > 0 && onTripStartUp.getTripStatus().equals("Accepted")){
+            System.out.println("MapFragmentView onActivityResult GET_DRIVER : OK");
+            //iMapFragmentPresenter.hideVisibilityLayoutItems(View.GONE);
+            final DriverProfile driverProfile = onTripStartUp.getDriverProfile();
+            final TripInfo tripInfo = onTripStartUp.getTripInfo();
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(onTripStartUp);
+            System.out.println("MapFragmentView onActivityResult GET_DRIVER onTripStartUp json : " + jsonString);
+                setTripStartDetails();
+                //iMapFragmentPresenter.getTripDriverToPickUp(driverProfile.getDriverLocation(), tripInfo.getPickupLocation(), false, ApiKey, tripInfo.getPickupAddress());
+           }
     }
 
     @Override
@@ -844,6 +867,7 @@ public class MapFragmentView extends BackHandledFragment implements
                 break;
             case R.id.layoutTripCancel:
                 cancelChoiceDialog("layoutTripCancel");
+                editor.clear();
                 break;
             case R.id.layoutOnTripStartUp:
                 System.out.println("clicked: " + clicked);
@@ -877,18 +901,28 @@ public class MapFragmentView extends BackHandledFragment implements
                 break;
             case R.id.layoutOngoingTripCancel:
                 cancelChoiceDialog("layoutOngoingTripCancel");
+                editor.clear();
                 break;
         }
     }
 
-    private Bitmap getMarkerBitmapFromView(String locationNAme) {
+    private Bitmap getMarkerBitmapFromView(String locationNAme,String point) {
 
         View customMarkerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_custom_marker, null);
         TextView locationName = (TextView) customMarkerView.findViewById(R.id.locationName);
+        ImageView markerIcon = (ImageView) customMarkerView.findViewById(R.id.markerIcon);
+        if(point.equals("startPoint")){
+            markerIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.location_pointer_icons_orange));
+        }else if(point.equals("endPoint")){
+            markerIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.location_pointer_icons_orange_square));
+        }else {
+            markerIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.location_pointer_icons_black));
+        }
         locationName.setText(locationNAme);
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
         customMarkerView.buildDrawingCache();
+        //customMarkerView.setPadding((int) getResources().getDimension(R.dimen._24),0,0,0);
         Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
@@ -982,6 +1016,7 @@ public class MapFragmentView extends BackHandledFragment implements
     public void setRoutesTrip(List<List<HashMap<String, String>>> route, List<Route> routes, String tripDist) {
         BitmapDescriptor iconStart = BitmapDescriptorFactory.fromResource(R.drawable.location_pointer_icons_orange);
         BitmapDescriptor iconEnd = BitmapDescriptorFactory.fromResource(R.drawable.location_pointer_icons_orange_square);
+        distance =tripDist;
         double presentTripLat = 0;
         double presentTripLng = 0;
         double endTripLat = 0;
@@ -995,16 +1030,16 @@ public class MapFragmentView extends BackHandledFragment implements
             if (mMap != null) {
                 mMap.clear();
                 mSourceMarker = null;
-                mSourceMarker = mMap.addMarker(new MarkerOptions()
+                /*mSourceMarker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(sourceLat, sourceLong))
                         .title("From"));
-                mSourceMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(sourceLocationTxt)));
+                mSourceMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(sourceLocationTxt,"startPoint")));
                 LatLng sourseLatLng = new LatLng(sourceLat, sourceLong);
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(destLat, destLong))
                         .title("To"))
-                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(destinationLocationTxt)));
-                LatLng destLatLng = new LatLng(destLat, destLong);
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(destinationLocationTxt,"endPoint")));
+                LatLng destLatLng = new LatLng(destLat, destLong);*/
                 ArrayList<LatLng> points = null;
                 PolylineOptions polyLineOptions = null;
                 // traversing through routes
@@ -1058,12 +1093,12 @@ public class MapFragmentView extends BackHandledFragment implements
                 }
                 //mMarkerRotations = bearingBetweenLocations(sourseLatLng,destLatLng);
                 //rotateMarker(mSourceMarker,Float.valueOf(String.valueOf(mMarkerRotations)));
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(presentTripLat,presentTripLng)))
-                        .setIcon(iconStart);
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng( endTripLat,endTripLng)))
-                        .setIcon(iconEnd);
+               Marker startPoint =  mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(presentTripLat,presentTripLng)));
+                        startPoint.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(sourceLocationTxt,"startPoint")));
+               Marker endPoint= mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng( endTripLat,endTripLng)));
+                        endPoint.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(destinationLocationTxt,"endPoint")));
 
                 frameLoaderLayout.setVisibility(View.GONE);
 
@@ -1102,11 +1137,11 @@ public class MapFragmentView extends BackHandledFragment implements
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(driverLatD, driverLngD))
                         .title("From"))
-                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView("Driver Location")));
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView("Driver Location","startPoint")));
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(pickUpLatD, pickUpLngD))
                         .title("To"))
-                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(pickUpLocName)));
+                        .setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(pickUpLocName,"endPoint")));
                 ArrayList<LatLng> points = null;
                 PolylineOptions polyLineOptions = null;
                 // traversing through routes

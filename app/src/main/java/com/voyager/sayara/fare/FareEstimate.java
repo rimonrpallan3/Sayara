@@ -169,7 +169,7 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnAccept:
-                Toast.makeText(this, "Please wait for this feature.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please wait while we process your request.", Toast.LENGTH_SHORT).show();
                 iFarePresenter.startTrip(userDetails.getUserID(),userDetails.getFName(),nameStartLoc,nameStart,nameEndLoc,nameEnd,distanceKm,costFairSet,driveCarId,"online");
                 break;
             case R.id.btnReject:
@@ -187,5 +187,11 @@ public class FareEstimate extends AppCompatActivity implements View.OnClickListe
         setResult(RESULT_OK, resultIntent);
         startActivity (resultIntent);
         finish();
+    }
+
+    @Override
+    public void toastMesg(String Msg) {
+        Toast.makeText(this, Msg, Toast.LENGTH_SHORT).show();
+
     }
 }

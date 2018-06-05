@@ -6,4 +6,5 @@ package com.voyager.sayara.fare.view;
 
 public interface IFareView {
     void waitToGetDriver();
+    void toastMesg(String Msg);
 }

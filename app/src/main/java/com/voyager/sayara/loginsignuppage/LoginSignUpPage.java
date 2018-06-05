@@ -1,6 +1,8 @@
 package com.voyager.sayara.loginsignuppage;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import com.voyager.sayara.common.Helper;
 import com.voyager.sayara.firstotppage.FirstOTPPage;
 
 import com.voyager.sayara.landingpage.LandingPage;
+import com.voyager.sayara.registerpage.model.UserDetails;
 import com.voyager.sayara.signinpage.SignInPage;
 
 import java.util.List;
@@ -23,10 +26,22 @@ import static com.voyager.sayara.common.Helper.RC_LOCATION_PERM_SIGUP;
 
 public class LoginSignUpPage extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_sigup_page);
+        Intent intent = getIntent();
+        String logout = intent.getStringExtra("logout");
+        sharedPrefs = getSharedPreferences(Helper.UserDetails,
+                Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+        if(logout!=null){
+            editor.clear();
+            System.out.println("LoginSignUpPage has ben called ");
+        }
 
     }
 

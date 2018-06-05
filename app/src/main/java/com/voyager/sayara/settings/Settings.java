@@ -21,6 +21,9 @@ import com.voyager.sayara.R;
 import com.voyager.sayara.costom.CircleImageView;
 import com.voyager.sayara.landingpage.LandingPage;
 import com.voyager.sayara.registerpage.model.UserDetails;
+import com.voyager.sayara.settings.presenter.ISettingsPresenter;
+import com.voyager.sayara.settings.presenter.SettingsPresenter;
+import com.voyager.sayara.settings.view.ISettingsView;
 import com.voyager.sayara.updateprofile.UpdateProfile;
 
 import butterknife.BindView;
@@ -30,9 +33,7 @@ import butterknife.ButterKnife;
  * Created by User on 28-May-18.
  */
 
-public class Settings extends AppCompatActivity implements View.OnClickListener  {
-
-
+public class Settings extends AppCompatActivity implements View.OnClickListener,ISettingsView {
 
     @BindView(R.id.llProfile)
     LinearLayout llProfile;
@@ -50,6 +51,7 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
     Toolbar tbSettings;
 
     UserDetails userDetails;
+    ISettingsPresenter iSettingsPresenter;
 
 
     @Override
@@ -109,6 +111,7 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
         }
         llProfile.setOnClickListener(this);
         llSignOut.setOnClickListener(this);
+        iSettingsPresenter = new SettingsPresenter(this);
     }
 
     @Override
@@ -155,9 +158,17 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.llSignOut:
+                iSettingsPresenter.logout(userDetails.getUserID(),1);
                 Toast.makeText(this,"Plase wait for this feather",Toast.LENGTH_LONG).show();
                 break;
 
         }
+    }
+
+    @Override
+    public void logedOut() {
+        Intent intentParent = getIntent();
+        setResult(RESULT_OK, intentParent);
+        finish();
     }
 }

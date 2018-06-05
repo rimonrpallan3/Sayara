@@ -10,17 +10,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.voyager.sayara.R;
+import com.voyager.sayara.firstotppage.Adapter.SpinAdapter;
+import com.voyager.sayara.firstotppage.model.CountryDetails;
 import com.voyager.sayara.firstotppage.presenter.FirstOTPPresenter;
 import com.voyager.sayara.firstotppage.view.IFirstOTPView;
 import com.voyager.sayara.loginsignuppage.LoginSignUpPage;
 import com.voyager.sayara.otppagesubmit.SubmitOTPPage;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -34,8 +38,12 @@ import java.io.Serializable;
     EditText edtPhNo;
     Button btnGetOtp;
     Spinner spinnerSelectContry;
-    ArrayAdapter<CharSequence> adapter;
+    //ArrayAdapter<CharSequence> adapter;
+    private SpinAdapter adapter;
     LoginSignUpPage loginSignUpPage;
+    String countryName = "";
+    Boolean intialPhase= true;
+
 
 
     @Override
@@ -45,7 +53,7 @@ import java.io.Serializable;
         edtZipCode = (TextView) findViewById(R.id.edtZipCode);
         edtPhNo = (EditText) findViewById(R.id.edtPhNo);
         btnGetOtp = (Button) findViewById(R.id.btnGetOtp);
-        otpPresenter = new FirstOTPPresenter(this);
+
 
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
@@ -55,11 +63,18 @@ import java.io.Serializable;
 
         spinnerSelectContry = (Spinner) findViewById(R.id.spinnerSelectCountry);
         spinnerSelectContry.setOnItemSelectedListener(this);
-        adapter = ArrayAdapter.createFromResource(this,
+
+        otpPresenter = new FirstOTPPresenter(this,this);
+       // adapter =new SimpleAdapter(this,android.R.layout.simple_spinner_item,)
+       /* adapter = ArrayAdapter.createFromResource(this,
                 R.array.country_names, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerSelectContry.setAdapter(adapter);
+        spinnerSelectContry.setPrompt(getString(R.string.otp_spinner_country));*/
+
+        countryName = "Please Select a Country";
+        edtZipCode.setText("");
         spinnerSelectContry.setPrompt(getString(R.string.otp_spinner_country));
 
     }
@@ -88,7 +103,7 @@ import java.io.Serializable;
 
     public void btnGetOtp(View v){
         btnGetOtp.setEnabled(false);
-        otpPresenter.doGetData(spinnerSelectContry.getSelectedItem().toString(),
+        otpPresenter.doGetData(countryName,
                 edtZipCode.getText().toString(),
                 edtPhNo.getText().toString());
 
@@ -132,5 +147,42 @@ import java.io.Serializable;
                     Toast.makeText(this, "Please try Again Later, ", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void getCountryDetailList(List<CountryDetails> countryDetailsList) {
+        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter =new SpinAdapter(this,android.R.layout.simple_spinner_item,countryDetailsList);
+        spinnerSelectContry.setAdapter(adapter); // Set the custom adapter to the spinner
+        spinnerSelectContry.setPrompt(getString(R.string.otp_spinner_country));
+        // You can create an anonymous listener to handle the event when is selected an spinner item
+        spinnerSelectContry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                // Here you get the current item (a User object) that is selected by its position
+                CountryDetails countryDetails = adapter.getItem(position);
+                if(intialPhase){
+                    intialPhase = false;
+                    countryName = "Please Select a Country";
+                    edtZipCode.setText("");
+                    spinnerSelectContry.setPrompt(getString(R.string.otp_spinner_country));
+                }else {
+                    System.out.println("ID: " + countryDetails.getCode() + "\nName: " + countryDetails.getName());
+                    countryName = countryDetails.getName();
+                    edtZipCode.setText(countryDetails.getDial_code());
+                }
+                // Here you can do the action you want to...
+                //Toast.makeText(this, "ID: " + countryDetails.getCode() + "\nName: " + countryDetails.getName(), Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapter) {
+                countryName = "Please Select a Country";
+                edtZipCode.setText("");
+            }
+
+        });
+
     }
 }

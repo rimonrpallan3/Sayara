@@ -61,6 +61,7 @@ public class Helper {
     public final static int CAMERA_CAPTURE_PERMISSION = 77;
     public final static int SEARCH_MAP_API_TRIP = 517;
     public final static int GET_DRIVER = 717;
+    public final static int LOG_OUT = 737;
     public final static int REQUEST_PHONE_STATE = 33;
     public final static int REQUEST_PHONE_SUPPORT_CALL = 121;
     public final static int REQUEST_PHONE_CUSTOMER_CALL = 122;
